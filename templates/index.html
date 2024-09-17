@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
+    <title>Academic Website</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Welcome to the Academic Website</h1>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#courses">Courses</a></li>
+                    <li><a href="#subscription">Subscription</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="about">
+            <h2>About Us</h2>
+            <p>Our teachers are all students from prestigious universities such as Imperial College London, UCL, and others in the UK and US. Our mission is to provide high-quality video courses coupled with practice questions to international students, at an affordable level.</p>
+        </section>
+
+        <section id="courses">
+            <h2>Courses</h2>
+            <p>We offer a variety of courses to meet diverse educational needs, including:</p>
+            <ul>
+                <li>A-Level</li>
+                <li>AP</li>
+                <li>IELTS</li>
+                <li>Programming Languages</li>
+            </ul>
+        </section>
+
+        <section id="subscription">
+            <h2>Subscription</h2>
+            <p>Access our courses by paying a subscription. The first 200 new users will receive a 70% discount and have the opportunity for our team to help revise their personal statement and assist in their university applications.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Email: info@academicwebsite.com</p>
+            <p>Phone: (123) 456-7890</p>
+        </section>
+
+        <section id="login">
+            <h2>Login</h2>
+            <p><a href="{% url 'login' %}">Click here to login</a></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Academic Website. All rights reserved.</p>
+    </footer>
+</body>
+</html>
