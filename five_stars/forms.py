@@ -1,13 +1,17 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django import forms
-from .models import Course
+from .models import Course, CustomUser
 
 
 class RegisterForm(UserCreationForm):
+    email = forms.EmailField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
     class Meta:
-        model = User
-        fields = ['username', 'password1', 'password2']
+        model = CustomUser
+        fields = ['username', 'email', 'password1', 'password2']
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')

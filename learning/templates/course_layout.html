@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/course_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+    <script src="{% static 'js/course.js' %}" defer></script>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Learning Platform</h1>
+    <nav>
+        <ul>
+            <li><a href="#" id="description-link">Description</a></li>
+            <li><a href="#courses">Learning Center</a></li>
+
+        </ul>
+    </nav>
+</div>
+
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        {#        <a href="{% url 'learn' %}" class="return-icon">Return</a>#}
+        {% for topic in topics %}
+            <h2 class="topic-header" id="toggle-topic-{{ topic.id }}">{{ topic.title }}</h2>
+            <ul class="subtopics" id="subtopics-{{ topic.id }}">
+                {% for subtopic in topic.subtopics.all %}
+                    <div class="course-item">
+                        <li><a href="#" data-video="{{ subtopic.video_url }}">{{ subtopic.title }}</a></li>
+                    </div>
+                {% endfor %}
+            </ul>
+
+        {% endfor %}
+    </div>
+
+    <!-- Main content area -->
+    <div class="content">
+        <div id="content-area"></div>
+        <h2 id="video-title"></h2>
+        <iframe id="video-frame" src="" title="Video Player"></iframe>
+    </div>
+</div>
+
+<script>
+
+</script>
+
+</body>
+</html>

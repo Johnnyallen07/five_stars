@@ -1,0 +1,44 @@
+.navbar h1 {
+    margin-left: 20px;
+}
+
+.navbar nav ul {
+    list-style-type: none; /* Removes bullets from list */
+    margin-right: 30px;
+    padding: 0;
+    display: flex;
+    /* Aligns list items horizontally */
+}
+
+.navbar nav ul li {
+    margin-left: 20px; /* Adds space between list items */
+}
+
+.navbar nav ul li a {
+    text-decoration: none; /* Removes underline from links */
+    color: #333; /* Sets link color */
+}
+
+.navbar nav ul li a:hover {
+    text-decoration: underline; /* Adds underline on hover */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Distributes space between items */
+    align-items: center; /* Aligns items vertically */
+    padding: 10px;
+    background-color: #007bff;
+    border-bottom: 1px solid #ccc;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}

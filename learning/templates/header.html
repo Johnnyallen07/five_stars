@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Header{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+
+<!-- Header with Icon and User Profile -->
+<div class="navbar-container">
+    <div class="header">
+        <!-- Website Icon on the left -->
+        <img src="{% static 'img/Coursera_logo.png' %}" alt="Website Logo" style="height: 20px; width: auto;">
+
+        <!-- Profile area on the right -->
+{#        <div class="profile">#}
+{#            <img src="profile.jpg" alt="Profile Image" onclick="toggleDropdown()">#}
+{#            <div class="dropdown-menu" id="dropdown">#}
+{#                <a href="#">Profile</a>#}
+{#                <a href="#">Settings</a>#}
+{#                <a href="#">Logout</a>#}
+{#            </div>#}
+{#        </div>#}
+    </div>
+
+    <!-- Navigation Bar below the header -->
+    <nav class="navbar">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="#">My Learning</a>
+    </nav>
+</div>
+<div class="home-container">
+{% block content %}
+    <h2 class="section-title">Current Products</h2>
+    <div class="course-grid">
+    {% for course in courses %}
+        <a href="{% url 'course' course.course_id %}">
+            <div class="course-box">
+                <img src="{{ course.image_url }}" alt="{{ course.title }}">
+                <h3>{{ course.title }}</h3>
+            </div>
+        </a>
+    {% endfor %}
+    </div>
+{% endblock %}
+</div>
+<!-- JavaScript for dropdown menu -->
+<script>
+    function toggleDropdown() {
+        const dropdown = document.getElementById('dropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close the dropdown if clicked outside
+    window.onclick = function (event) {
+        if (!event.target.matches('.profile img')) {
+            const dropdown = document.getElementById('dropdown');
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        }
+    };
+</script>
+
+</body>
+</html>

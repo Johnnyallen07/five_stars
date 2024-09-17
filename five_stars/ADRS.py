@@ -2,16 +2,20 @@ import os
 import django
 
 # Set the Django settings module
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'videoDist.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'five_stars.settings')
 
 # Setup Django
 django.setup()
 
-# Now you can import and use Django models
-from videoDist.models import Course
+from django.db import connection
 
-# Fetch all course records
-courses = Course.objects.all()
-for course in courses:
-    print(course.course_id, course.title)
+# Execute raw SQL query
+with connection.cursor() as cursor:
+    pass
+    rows = cursor.fetchall()
+
+# Output the result
+for row in rows:
+    print(row)
+
 
