@@ -6,61 +6,49 @@ body {
 /* Navigation Bar */
 
 
-
-/* Main container with margin to account for the fixed navbar */
 .container {
     display: flex;
-    /*padding: 20px;*/
 }
 
 /* Sidebar styling */
 .sidebar {
     width: 250px;
     background-color: white; /* Ensure it's white */
-    margin-left: 30px;
     height: calc(100vh - 60px); /* Full height minus the navbar */
     overflow-y: auto; /* Enable vertical scrolling */
-    border-right: 1px solid black;
+    border-right: 1px solid #d9d9d9;
 }
 
 .sidebar h2 {
-    margin-top: 20px;
+    /*padding-top: 20px;*/
     cursor: pointer;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    display: block; /* Ensure the element takes up the full width */
+    margin: 0; /* Remove default margins */
 }
 
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar li {
-    margin: 10px 0;
-    cursor: pointer;
-}
-
-.sidebar li .subtopics {
-    display: none;
-    margin-left: 20px;
-}
-
-.sidebar li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-}
+/*.sidebar ul {*/
+/*    list-style-type: none;*/
+/*    padding: 0;*/
+/*}*/
 
 
 /* Content area */
 .content {
     flex-grow: 1;
-    margin-right: 30px;
-    margin-left: 30px;
+    padding: 20px 30px;
+}
+
+.content h2{
+    margin: 0;
 }
 
 .content iframe {
     width: 100%;
     height: 500px;
     border: none;
+    margin-top:20px
 }
 
 /* Align content and sidebar */
@@ -70,23 +58,31 @@ body {
 
 .sidebar, .content {
     box-sizing: border-box;
+    margin: 0;
 }
 
-/* Make sure course-item elements are visible and interactive */
 .course-item {
-    padding: 10px;
-    position: relative; /* Ensure proper stacking */
-    cursor: pointer; /* Indicate that the item is clickable */
+    padding: 10px 40px;
+    position: relative;
 }
 
-/* Ensure subtopics are also interactive */
-.subtopics a {
-    display: block; /* Make links take up the full width of their container */
-    padding: 5px;
+.course-item a{
     text-decoration: none;
-    color: #007bff; /* Style links as needed */
 }
 
-.subtopics a:hover {
-    background-color: #f0f0f0; /* Highlight on hover */
+
+
+.course-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 30px 20px;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.course-header-container a {
+    color: gray;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 40px;
 }

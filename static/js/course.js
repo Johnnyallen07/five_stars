@@ -19,6 +19,8 @@ function displayVideo(videoUrl, title) {
     const videoFrame = document.getElementById('video-frame');
     const videoTitle = document.getElementById('video-title');
 
+    videoFrame.style.display = 'block';
+    videoTitle.style.display = 'block';
     // Clear the markdown content
     contentArea.innerHTML = '';
 
@@ -30,18 +32,25 @@ function displayVideo(videoUrl, title) {
 // Handle click event for the description link
 document.getElementById('description-link').addEventListener('click', function (event) {
     event.preventDefault(); // Prevent default anchor behavior
+    document.getElementById('video-title').style.display = 'none';
+    document.getElementById('video-frame').style.display = 'none';
     loadMarkdown(); // Display markdown on link click
 });
 // Add JS to toggle visibility of subtopics
 document.querySelectorAll('.topic-header').forEach(function (header) {
     header.addEventListener('click', function () {
-        const subtopics = document.getElementById('subtopics-' + this.id.split('-')[2]);
-        subtopics.style.display = (subtopics.style.display === 'block') ? 'none' : 'block';
+        const topicId = this.id.split('-')[2];
+        document.querySelectorAll(`.course-item[data-topic-id="${topicId}"]`).forEach(function (subtopic) {
+            console.log('Current display:', subtopic.style.display);
+            subtopic.style.display = (subtopic.style.display === 'none') ? 'block' : 'none';
+            console.log('New display:', subtopic.style.display);
+        });
     });
+
 });
 
 // Function to handle click events on subtopics
-document.querySelectorAll('.subtopics a').forEach(function (link) {
+document.querySelectorAll('.course-item').forEach(function (link) {
     link.addEventListener('click', function (event) {
         event.preventDefault(); // Prevent default link behavior
         const videoUrl = this.getAttribute('data-video');

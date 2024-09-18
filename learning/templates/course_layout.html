@@ -7,20 +7,13 @@
     <title>Learning Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/course_layout.css' %}">
-    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
     <script src="{% static 'js/course.js' %}" defer></script>
 </head>
 <body>
-
-<div class="navbar">
-    <h1>Learning Platform</h1>
-    <nav>
-        <ul>
-            <li><a href="#" id="description-link">Description</a></li>
-            <li><a href="#courses">Learning Center</a></li>
-
-        </ul>
-    </nav>
+<div class="course-header-container">
+    <img src="{% static 'img/Coursera_logo.png' %}" alt="Website Logo" style="height: 20px; width: auto;">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="#" id="description-link">Description</a>
 </div>
 
 <div class="container">
@@ -29,13 +22,12 @@
         {#        <a href="{% url 'learn' %}" class="return-icon">Return</a>#}
         {% for topic in topics %}
             <h2 class="topic-header" id="toggle-topic-{{ topic.id }}">{{ topic.title }}</h2>
-            <ul class="subtopics" id="subtopics-{{ topic.id }}">
-                {% for subtopic in topic.subtopics.all %}
-                    <div class="course-item">
-                        <li><a href="#" data-video="{{ subtopic.video_url }}">{{ subtopic.title }}</a></li>
-                    </div>
-                {% endfor %}
-            </ul>
+            {% for subtopic in topic.subtopics.all %}
+                <div class="course-item" data-topic-id="{{ topic.id }}">
+                    <a href="#" data-video="{{ subtopic.video_url }}">{{ subtopic.title }}</a>
+                </div>
+            {% endfor %}
+
 
         {% endfor %}
     </div>
@@ -47,10 +39,6 @@
         <iframe id="video-frame" src="" title="Video Player"></iframe>
     </div>
 </div>
-
-<script>
-
-</script>
 
 </body>
 </html>

@@ -23,22 +23,23 @@
     text-decoration: underline; /* Adds underline on hover */
 }
 
+
+/* Navigation Bar directly below the header */
 .navbar {
     display: flex;
-    justify-content: space-between; /* Distributes space between items */
-    align-items: center; /* Aligns items vertically */
-    padding: 10px;
-    background-color: #007bff;
-    border-bottom: 1px solid #ccc;
+    justify-content: flex-start;
+    padding: 20px 66px;
+    background-color: #fff;
+    gap: 40px;
 }
 
 .navbar a {
-    color: #fff;
+    color: gray;
     text-decoration: none;
-    margin: 0 15px;
     font-size: 16px;
+    gap: 20px;
 }
 
 .navbar a:hover {
-    text-decoration: underline;
+    text-decoration: blue;
 }
