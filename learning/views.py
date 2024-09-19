@@ -19,8 +19,3 @@ def course_access(request, course_id):
     else:
         # If the user hasn't purchased the course, redirect to the purchase page
         return redirect(reverse('purchase'))
-
-
-def home_view(request):
-    courses = Course.objects.all()
-    return render(request, 'home.html', {'courses': courses})

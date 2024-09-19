@@ -3,13 +3,10 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-}
-
-.home-container {
-    margin-left: 66px;
-    margin-top: 166px;
 
 }
+
+
 
 .section-title {
     font-size: 24px;
@@ -44,3 +41,52 @@ body {
     font-size: 18px;
     color: #333;
 }
+
+
+.teacher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 200px); /* Fixed width of 200px for each box */
+    gap: 20px;
+    justify-content: flex-start;
+    overflow-y: auto;
+
+}
+
+.teacher-grid a {
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit color from parent */
+}
+
+.teacher-grid a:hover {
+    text-decoration: none; /* Ensure no underline on hover */
+}
+
+.teacher-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 200px; /* Fixed width */
+    height: 200px; /* Fixed height */
+    padding: 10px;
+
+}
+
+.teacher-box h3 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+    text-decoration: none;
+}
+
+.teacher-box h4{
+    margin:2px;
+}
+
+.teacher-box p {
+    font-size: 14px;
+    color: #666;
+}
+

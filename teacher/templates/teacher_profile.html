@@ -1,0 +1,81 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block title %}Teacher Profile{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/teacher_profile_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/personal_image_layout.css' %}">
+{% endblock %}
+{% block nav-content %}
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+    <a href="{% url 'teacher-profile' %}">Profile</a>
+
+{% endblock %}
+{% block content %}
+    <div class="teacher-profile-container">
+        <!-- Left Column -->
+        <div class="left-column">
+            <div class="profile-image-box">
+                <h3>Personal Image</h3>
+
+                <div class="image-container">
+                    <img id="photoPreview" alt="Your Photo" style="display: none;">
+                </div>
+
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <button type="button" class="custom-file-button"
+                            onclick="document.getElementById('photoInput').click();">Upload Photo
+                    </button>
+                    <input type="file" id="photoInput" accept="image/*" onchange="previewImage()"
+                           style="display: none;">
+                </form>
+
+                <h6>Tips: Enlarge, move the Image inside the circle</h6>
+
+            </div>
+            <div class="subjects-box">
+                <h3>Subjects</h3>
+                <form id="subjects-form">
+                    <div id="subjects-container">
+                        <div class="subject-field">
+                            <input type="text" name="subject[]" placeholder="Enter subject">
+                        </div>
+                    </div>
+                    <button type="button" id="remove-btn" class="remove-btn" onclick="removeSubject()">Remove</button>
+                    <button type="button" class="add-btn" onclick="addSubject()">Add</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+            <h2>Personal Information</h2>
+            <div class="personal-info-box">
+                <form action="/submit-teacher-info" method="POST">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name:</label>
+                            <input type="text" id="first-name" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name:</label>
+                            <input type="text" id="last-name" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="school">School:</label>
+                        <input type="text" id="school" name="school">
+                    </div>
+                    <div class="form-group">
+                        <label for="introduction">Personal Introduction:</label>
+                        <textarea id="introduction" name="introduction" rows="4" cols="50"></textarea>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

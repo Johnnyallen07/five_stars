@@ -1,0 +1,158 @@
+.teacher-profile-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Left Column */
+.left-column {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.profile-image-box {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+
+.profile-image-box h6 {
+    color: gray;
+    font-weight: normal;
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.subjects-box {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.subjects-box h3 {
+    margin: 10px 10px;
+}
+
+/* Right Column */
+.right-column {
+    width: 70%;
+}
+
+.right-column h2 {
+    margin-top: 0;
+}
+
+.personal-info-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.personal-info-box h2 {
+    margin-top: 0;
+}
+
+.personal-info-box p {
+    margin: 10px 0;
+}
+
+.personal-info-box button {
+    text-align: center;
+    display: flex;
+}
+
+.subject-field {
+    margin: 10px 10px;
+    display: flex;
+    align-items: center;
+}
+
+.subject-field input {
+    width: 100%;
+    padding: 5px;
+}
+
+.remove-btn, .add-btn {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.remove-btn {
+    background-color: #f44336;
+    display: none; /* Initially hide the remove button */
+}
+
+.add-btn {
+    background-color: #4CAF50;
+}
+
+.personal-info-box {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group {
+    margin: 15px;
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+
+
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    width: 100%; /* Adjust to fit within the container's width */
+    height: 150px; /* Fixed height for the text area */
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    resize: none; /* Prevent resizing by the user */
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+

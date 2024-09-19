@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login_style.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        {% if form.non_field_errors %}
+            <div class="error-message">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <input type="submit" value="Login">
+        </form>
+        <div class="register-link">
+            <a href="{% url 'register' %}">Don't have an account? Register here</a>
+            <a href="{% url 'teacher-register' %}">Join us? Teacher sign up here</a>
+        </div>
+    </div>
+</body>
+</html>

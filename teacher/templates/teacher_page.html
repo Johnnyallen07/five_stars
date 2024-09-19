@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Page</title>
+    <link rel="stylesheet" href="{% static 'css/teacher_page.css' %}">
+</head>
+<body>
+<div class="teacher-page">
+    <div class="left-box">
+        <h2>Teacher Information</h2>
+        <p>Name: John Doe</p>
+        <p>Subject: Mathematics</p>
+        <p>Experience: 10 years</p>
+        <!-- Add more teacher details -->
+    </div>
+
+    <div class="right-section">
+        <div class="box">
+            <h2>Activities</h2>
+            <ul>
+                <li>9:00 AM - Algebra Class</li>
+                <li>11:00 AM - Geometry Class</li>
+                <li>2:00 PM - Student Consultation</li>
+                <!-- Add more activities -->
+            </ul>
+        </div>
+
+        <div class="box">
+            <h2>Schedule</h2>
+            <p>Monday: 9:00 AM - 3:00 PM</p>
+            <p>Tuesday: 10:00 AM - 4:00 PM</p>
+            <!-- More schedule details -->
+        </div>
+    </div>
+</div>
+</body>
+</html>

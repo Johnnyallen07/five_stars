@@ -26,6 +26,12 @@ body {
     height: 40px;
 }
 
+.content-container {
+    margin-left: 66px;
+    margin-top: 166px;
+
+}
+
 .profile {
     position: relative;
     margin-left: auto;

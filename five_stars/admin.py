@@ -15,7 +15,7 @@ class CustomUserAdmin(UserAdmin):
         ('Important Dates', {'fields': ('last_login', 'date_joined')}),
     )
     filter_horizontal = UserAdmin.filter_horizontal + ('subscriptions',)
-    list_display = ('username', 'email', 'is_staff')  #
+    list_display = ('id', 'username', 'email', 'is_staff')  #
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
