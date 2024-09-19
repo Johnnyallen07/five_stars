@@ -11,30 +11,36 @@
 
 {% endblock %}
 {% block content %}
-    <div class="teacher-profile-container">
-        <!-- Left Column -->
-        <div class="left-column">
-            <div class="profile-image-box">
-                <h3>Personal Image</h3>
+    <form id="combined-form" method="POST">
+    {% csrf_token %}
+        <div class="teacher-profile-container">
+            <!-- Left Column -->
 
-                <div class="image-container">
-                    <img id="photoPreview" alt="Your Photo" style="display: none;">
-                </div>
+            <div class="left-column">
 
-                <form id="uploadForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="profile-image-box">
+                    <h3>Personal Image</h3>
+
+                    <div class="image-container">
+                        <img id="photoPreview" alt="Your Photo" style="display: none;">
+                    </div>
+
+
                     <button type="button" class="custom-file-button"
                             onclick="document.getElementById('photoInput').click();">Upload Photo
                     </button>
                     <input type="file" id="photoInput" accept="image/*" onchange="previewImage()"
                            style="display: none;">
-                </form>
 
-                <h6>Tips: Enlarge, move the Image inside the circle</h6>
 
-            </div>
-            <div class="subjects-box">
-                <h3>Subjects</h3>
-                <form id="subjects-form">
+                    <h6>Tips: Enlarge, move the Image inside the circle</h6>
+
+                </div>
+                <div class="subjects-box">
+                    <h3>Subjects</h3>
+
+
                     <div id="subjects-container">
                         <div class="subject-field">
                             <input type="text" name="subject[]" placeholder="Enter subject">
@@ -42,15 +48,17 @@
                     </div>
                     <button type="button" id="remove-btn" class="remove-btn" onclick="removeSubject()">Remove</button>
                     <button type="button" class="add-btn" onclick="addSubject()">Add</button>
-                </form>
-            </div>
-        </div>
+                    <input type="hidden" id="id_subjects" name="subjects">
 
-        <!-- Right Column -->
-        <div class="right-column">
-            <h2>Personal Information</h2>
-            <div class="personal-info-box">
-                <form action="/submit-teacher-info" method="POST">
+
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <h2>Personal Information</h2>
+                <div class="personal-info-box">
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="first-name">First Name:</label>
@@ -73,9 +81,35 @@
                         <label for="introduction">Personal Introduction:</label>
                         <textarea id="introduction" name="introduction" rows="4" cols="50"></textarea>
                     </div>
-                    <button type="submit">Submit</button>
-                </form>
+
+
+                    <button type="button" id="submit-btn">Submit</button>
+
+                    {% for field in form %}
+                        {% if field.errors %}
+
+                            {% for error in field.errors %}
+                                <div class="error-message">
+                                    <p>{{ field.label }}: {{ error }}</p>
+                                </div>
+                            {% endfor %}
+
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                        <div class="error-message">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
+
         </div>
-    </div>
+    </form>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/subjects.js' %} "></script>
+    <script src="{% static 'js/personal_image.js' %}" defer></script>
 {% endblock %}

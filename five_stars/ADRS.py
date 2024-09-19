@@ -32,7 +32,10 @@ for table in tables:
 # Execute raw SQL query
 with connection.cursor() as cursor:
     # Rename the column
-    cursor.execute('ALTER TABLE five_stars_customuser RENAME COLUMN isTeacher TO is_teacher;')
+    cursor.execute('SELECT * FROM teacher_teacher')
+    rows = cursor.fetchall()
 
-# Output a success message
-print("Column renamed successfully.")
+# Output the table names
+for row in rows:
+    print(row[0])
+
