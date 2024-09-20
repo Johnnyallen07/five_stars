@@ -22,7 +22,7 @@ class Topic(models.Model):
 class Subtopic(models.Model):
     topic = models.ForeignKey(Topic, related_name="subtopics", on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    video_url = models.URLField(blank=True, null=True)  # Assuming videos are external, like YouTube
+    video_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.title

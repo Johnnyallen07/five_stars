@@ -7,7 +7,8 @@ from teacher.models import Teacher
 
 def teacher_page(request, teacher_id):
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
-    return render(request, 'teacher_page.html', {'teacher': teacher})
+    subjects_list = teacher.subjects.split(',')  # Split the subjects
+    return render(request, 'teacher_page.html', {'teacher': teacher, 'subjects': subjects_list})
 
 
 def teacher_profile(request):

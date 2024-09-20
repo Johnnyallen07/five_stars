@@ -4,36 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <title>Teacher Page</title>
+    <link rel="stylesheet" href="{% static 'css/teacher_profile_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/personal_image_layout.css' %}">
     <link rel="stylesheet" href="{% static 'css/teacher_page.css' %}">
+
 </head>
 <body>
-<div class="teacher-page">
-    <div class="left-box">
-        <h2>Teacher Information</h2>
-        <p>Name: John Doe</p>
-        <p>Subject: Mathematics</p>
-        <p>Experience: 10 years</p>
-        <!-- Add more teacher details -->
+<div class="teacher-profile-container">
+    <!-- Left Column -->
+
+    <div class="left-column">
+        <div class="profile-image-box">
+            <h3>{{ teacher.first_name }}</h3>
+
+            <div class="image-container">
+                <img id="photoPreview" alt="Your Photo" style="display: none;">
+            </div>
+            {#            #}
+            {#            <input type="file" id="photoInput" accept="image/*" onchange="previewImage()"#}
+            {#                   style="display: none;">#}
+
+
+        </div>
+        <div class="subjects-box">
+            <h3>Subjects</h3>
+
+            <div class="subjects-list">
+                <!-- The subjects will be dynamically added here -->
+                {% for subject in subjects %}
+                    <h6 class="subject-item">{{ subject.strip }}</h6>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
-    <div class="right-section">
-        <div class="box">
-            <h2>Activities</h2>
-            <ul>
-                <li>9:00 AM - Algebra Class</li>
-                <li>11:00 AM - Geometry Class</li>
-                <li>2:00 PM - Student Consultation</li>
-                <!-- Add more activities -->
-            </ul>
-        </div>
+    <!-- Right Column -->
+    <div class="right-column">
+        <h2>Personal Information</h2>
+        <div class="personal-info-box">
+            <div class="row">
+                <div class="col">
+                    <label>First Name:</label>
+                    <span>{{ teacher.first_name }}</span>
+                </div>
+                <div class="col">
+                    <label>Last Name:</label>
+                    <span>{{ teacher.last_name }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <label>School:</label>
+                <span>{{ teacher.school }}</span>
+            </div>
+            <div class="row">
+                <label>Introduction:</label>
 
-        <div class="box">
-            <h2>Schedule</h2>
-            <p>Monday: 9:00 AM - 3:00 PM</p>
-            <p>Tuesday: 10:00 AM - 4:00 PM</p>
-            <!-- More schedule details -->
+            </div>
+            <div class="row">
+                <div class="introduction-text">{{ teacher.introduction }}</div>
+            </div>
+        </div>
+        <h2>Activities</h2>
+        <div class="activities-box">
+
+        </div>
+        <h2>Schedule</h2>
+        <div class="schedule-box">
         </div>
     </div>
+
 </div>
 </body>
 </html>

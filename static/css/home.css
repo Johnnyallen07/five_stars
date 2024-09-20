@@ -36,12 +36,10 @@ body {
     object-fit: cover;
 }
 
-.course-box h3 {
-    padding: 10px;
-    font-size: 18px;
-    color: #333;
+.course-box a {
+    text-decoration: none;
+    color: inherit;
 }
-
 
 .teacher-grid {
     display: grid;
