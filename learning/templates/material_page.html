@@ -1,0 +1,219 @@
+{% extends 'course_header.html' %}{% load static %} {% load customfilter %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'assets/font-awesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/select2/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/mdb-blogtemplate/css/mdb.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/DataTables/datatables.min.css' %}"/>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'assets/font-awesome/js/all.min.js' %}"></script>
+    <script src="{% static 'assets/default/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/DataTables/datatables.min.js' %}"></script>
+    <script src="{% static 'assets/bootstrap/js/popper.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/mdb-blogtemplate/js/mdb.min.js' %}"></script>
+    {#    <script type="text/javascript" src="{% static 'assets/default/js/script.js' %}"></script>#}
+{% endblock %}
+{% block content %}
+
+    <main class="py-5">
+        <div class="container mb-3">
+            {#        {% if messages %}#}
+            {#            <div class="row">#}
+            {#                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">#}
+            {#                    {% for message in messages %}#}
+            {#                        <div class="alert alert-{{ message.tags }} w-100 rounded-0 mb-2 redirect-msg">#}
+            {#                            <div class="d-flex w-100">#}
+            {#                                <div class="col-auto flex-shrink-1 flex-grow-1">{{ message }}</div>#}
+            {#                                <div class="col-auto text-center">#}
+            {#                                    <button class="btn-close btn-sm text-sm" type="button"#}
+            {#                                            onclick="$(this).closest('.alert').remove()"></button>#}
+            {#                                </div>#}
+            {#                            </div>#}
+            {##}
+            {#                        </div>#}
+            {#                    {% endfor %}#}
+            {#                </div>#}
+            {#            </div>{% endif %}#}
+            <section class="">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card card-default border rounded-0 shadow">
+                            <div class="card-header">
+                                <h4 class="card-title"><b>My Files</b></h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered" id="file-table">
+                                    <colgroup>
+                                        <col width="30%">
+                                        <col width="40%">
+                                        <col width="30%">
+
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="bg-gradient bg-light">
+                                        <th class=text-center>Title</th>
+                                        <th class=text-center>Description</th>
+                                        <th class=text-center>FileName</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for post in posts %}
+                                        <tr>
+                                            <td class="text-start">{{ post.title }}</td>
+                                            <td class="text-start">{{ post.description }}</td>
+                                            <td class="text-start"><a href="{{ post.file_path.url }}"
+                                                                      download="{{ post.file_path|replaceBlank:'uploads/' }}">{{ post.file_path|replaceBlank:'uploads/' }}
+                                                <i class="fa fa-download"></i></a></td>
+                                            {#                                <td class="text-center"><button class="btn btn-default bg-gradient btn-sm copy-link" type="button" data-url="{{ request.build_absolute_uri|slice:':-1' }}{{ post.get_share_url }}" title="Copy Link tp clipboard"><i class="fa fa-copy"></i> Share Link</button></td>#}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    <script>
+        $(function () {
+            $('#file-table').find('td, th').addClass('align-middle px-2 py-1 text-sm')
+            $('.copy-link').click(function () {
+                var input = $('<input class="clip-text">')
+                input.val($(this).attr('data-url'))
+                $('main').append(input)
+                input[0].select()
+                input[0].setSelectionRange(0, (input.val()).length)
+                var copy = document.execCommand('copy')
+                if (copy) {
+                    alert("Link Copied to Clipboard")
+                }
+                setTimeout(function () {
+                    input.remove()
+                }, 300)
+            })
+
+            $('#file-table').dataTable({
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                "pageLength": 25
+            })
+        })
+    </script>
+    <div class="modal fade" id="uni_modal" role='dialog'>
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-sm btn-flat btn-primary rounded-0" id='submit'
+                            onclick="$('#uni_modal form').submit()">Save
+                    </button>
+                    <button type="button" class="btn btn-sm btn-flat btn-light border rounded-0"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirm_modal" role='dialog'>
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="delete_content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-flat btn-primary rounded-0" id='confirm' onclick="">
+                        Continue
+                    </button>
+                    <button type="button" class="btn btn-sm btn-flat btn-light border rounded-0"
+                            data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loader = $('<div>')
+        loader.attr('id', 'pre-loader')
+        loader.html('<div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>')
+
+        window.start_loader = function () {
+            $('body').removeClass('loading')
+            if ($('#pre-loader').length > 0)
+                $('#pre-loader').remove();
+            $('body').append(loader)
+            $('body').addClass('loading')
+        }
+        window.end_loader = function () {
+            if ($('#pre-loader').length > 0)
+                $('#pre-loader').remove();
+            $('body').removeClass('loading')
+        }
+        window.uni_modal = function ($title = '', $url = '', $size = "") {
+            start_loader()
+            $.ajax({
+                url: $url,
+                error: err => {
+                    console.log()
+                    alert("An error occured")
+                },
+                success: function (resp) {
+                    if (resp) {
+                        $('#uni_modal .modal-title').html($title)
+                        $('#uni_modal .modal-body').html(resp)
+                        if ($size != '') {
+                            $('#uni_modal .modal-dialog').addClass($size + '  modal-dialog-centered')
+                        } else {
+                            $('#uni_modal .modal-dialog').removeAttr("class").addClass("modal-dialog modal-md modal-dialog-centered")
+                        }
+                        $('#uni_modal').modal({
+                            backdrop: 'static',
+                            keyboard: false,
+                            focus: true
+                        })
+                        $('#uni_modal').modal('show')
+                        end_loader()
+                    }
+                }
+            })
+        }
+        window._conf = function ($msg = '', $func = '', $params = []) {
+            $('#confirm_modal #confirm').attr('onclick', $func + "(" + $params.join(',') + ")")
+            $('#confirm_modal .modal-body').html($msg)
+            $('#confirm_modal').modal('show')
+        }
+        $(function () {
+            if ($('.redirect-msg').length > 0) {
+                setTimeout(() => {
+                    $('.redirect-msg').hide('slideUp')
+                    setTimeout(() => {
+                        $('.redirect-msg').remove()
+                    }, 500)
+                }, 3500)
+            }
+
+        })
+    </script>
+
+
+    <script src="{% static 'assets/select2/dist/js/select2.full.js' %}"></script>
+{% endblock %}

@@ -1,4 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+import os
+from django.dispatch import receiver
 
 
 class Course(models.Model):
@@ -26,3 +30,38 @@ class Subtopic(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class MaterialPost(models.Model):
+    course_title = models.ForeignKey(Course, related_name="materials", on_delete=models.CASCADE)
+    title = models.CharField(max_length=250)
+    description = models.TextField(blank=True, null=True)
+    file_path = models.FileField(upload_to='uploads/', blank=True, null=True)
+    date_created = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+@receiver(models.signals.post_delete, sender=MaterialPost)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    if instance.file_path:
+        if os.path.isfile(instance.file_path.path):
+            os.remove(instance.file_path.path)
+
+
+@receiver(models.signals.pre_save, sender=MaterialPost)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = sender.objects.get(pk=instance.pk).file_path
+    except sender.DoesNotExist:
+        return False
+
+    new_file = instance.file_path
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Topic, Subtopic, Course
+from .models import Topic, Subtopic, Course, MaterialPost
 
 
 class SubtopicInline(admin.TabularInline):
@@ -25,3 +25,6 @@ admin.site.register(Topic, TopicAdmin)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('title', 'image_url')
     search_fields = ('title',)
+
+
+admin.site.register(MaterialPost)

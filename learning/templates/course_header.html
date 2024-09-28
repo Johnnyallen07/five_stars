@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Platform</title>
+    {% block css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/course_layout.css' %}">
+    <script src="{% static 'js/course.js' %}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    {% block script %}{% endblock %}
+</head>
+<body>
+<div class="course-header-container">
+    <img src="{% static 'img/Coursera_logo.png' %}" alt="Website Logo" style="height: 20px; width: auto;">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="#" id="description-link">Description</a>
+    <a href="{% url 'course_material' course_id=course.course_id %}" id="material">Material</a>
+</div>
+{% block content %}{% endblock %}
+</body>
+</html>

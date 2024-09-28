@@ -6,7 +6,7 @@ body {
 /* Navigation Bar */
 
 
-.container {
+.sidebar-content-container {
     display: flex;
 }
 
@@ -40,11 +40,18 @@ body {
     padding: 20px 30px;
 }
 
-.content h2{
+.content h4{
     margin: 0;
 }
 
-.content iframe {
+.content iframe, .content video {
+    width: 100%;
+    height: 500px;
+    border: none;
+    margin-top:20px
+}
+
+.content video {
     width: 100%;
     height: 500px;
     border: none;
@@ -52,7 +59,7 @@ body {
 }
 
 /* Align content and sidebar */
-.container {
+.sidebar-content-container {
     align-items: flex-start;
 }
 
@@ -62,12 +69,12 @@ body {
 }
 
 .course-item {
-    padding: 10px 40px;
+    padding: 10px 30px;
     position: relative;
 }
 
-.course-item a{
-    text-decoration: none;
+.course-item h4{
+    margin:10px;
 }
 
 
@@ -78,6 +85,7 @@ body {
     justify-content: flex-start;
     padding: 30px 20px;
     border-bottom: 1px solid #d9d9d9;
+
 }
 
 .course-header-container a {

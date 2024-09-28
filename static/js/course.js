@@ -24,6 +24,8 @@ function displayVideo(videoUrl, title) {
     // Clear the markdown content
     contentArea.innerHTML = '';
 
+    console.log(videoUrl)
+    console.log(videoFrame)
     // Display the selected video and title
     videoFrame.src = videoUrl;
     videoTitle.textContent = title;
@@ -53,8 +55,11 @@ document.querySelectorAll('.topic-header').forEach(function (header) {
 document.querySelectorAll('.course-item').forEach(function (link) {
     link.addEventListener('click', function (event) {
         event.preventDefault(); // Prevent default link behavior
-        const videoUrl = this.getAttribute('data-video');
+        console.log(this)
+        const videoUrl = this.querySelector('h4').getAttribute('data-video');
         const videoTitle = this.textContent;
+        console.log(videoUrl)
+        console.log(videoTitle)
         displayVideo(videoUrl, videoTitle); // Display video and remove markdown
     });
 });
