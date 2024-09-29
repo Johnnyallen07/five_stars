@@ -1,3 +1,4 @@
+
 function loadMarkdown() {
     fetch('/static/markdown.md') // Assuming the markdown file is located in the static folder
         .then(response => response.text())
@@ -8,44 +9,29 @@ function loadMarkdown() {
         .catch(error => console.error('Error fetching markdown:', error));
 }
 
-// Load the markdown file by default when the page loads
-window.onload = function () {
-    loadMarkdown(); // Display markdown on page load
-};
 
 // Function to display the selected video
 function displayVideo(videoUrl, title) {
-    const contentArea = document.getElementById('content-area');
     const videoFrame = document.getElementById('video-frame');
     const videoTitle = document.getElementById('video-title');
 
     videoFrame.style.display = 'block';
     videoTitle.style.display = 'block';
-    // Clear the markdown content
-    contentArea.innerHTML = '';
-
-    console.log(videoUrl)
-    console.log(videoFrame)
-    // Display the selected video and title
     videoFrame.src = videoUrl;
     videoTitle.textContent = title;
 }
 
-// Handle click event for the description link
-document.getElementById('description-link').addEventListener('click', function (event) {
-    event.preventDefault(); // Prevent default anchor behavior
-    document.getElementById('video-title').style.display = 'none';
-    document.getElementById('video-frame').style.display = 'none';
-    loadMarkdown(); // Display markdown on link click
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('information').addEventListener('click', function (event) {
+        loadMarkdown();
+    });
 });
 // Add JS to toggle visibility of subtopics
 document.querySelectorAll('.topic-header').forEach(function (header) {
     header.addEventListener('click', function () {
         const topicId = this.id.split('-')[2];
         document.querySelectorAll(`.course-item[data-topic-id="${topicId}"]`).forEach(function (subtopic) {
-            console.log('Current display:', subtopic.style.display);
             subtopic.style.display = (subtopic.style.display === 'none') ? 'block' : 'none';
-            console.log('New display:', subtopic.style.display);
         });
     });
 
@@ -55,11 +41,8 @@ document.querySelectorAll('.topic-header').forEach(function (header) {
 document.querySelectorAll('.course-item').forEach(function (link) {
     link.addEventListener('click', function (event) {
         event.preventDefault(); // Prevent default link behavior
-        console.log(this)
         const videoUrl = this.querySelector('h4').getAttribute('data-video');
         const videoTitle = this.textContent;
-        console.log(videoUrl)
-        console.log(videoTitle)
         displayVideo(videoUrl, videoTitle); // Display video and remove markdown
     });
 });
@@ -78,3 +61,60 @@ document.querySelectorAll('.course-item').forEach(item => {
 });
 
 
+// document.addEventListener('DOMContentLoaded', function () {
+//     let markdownDisplayed = false; // To track if markdown has been loaded already
+//
+//     function loadMarkdown() {
+//         fetch('/static/markdown.md') // Adjust the path if necessary
+//             .then(response => {
+//                 if (!response.ok) throw new Error('Network response was not ok');
+//                 return response.text();
+//             })
+//             .then(markdown => {
+//                 const contentArea = document.getElementById('content-area');
+//                 contentArea.innerHTML = marked.parse(markdown); // Parse and insert markdown
+//                 markdownDisplayed = true;
+//             })
+//             .catch(error => console.error('Error fetching markdown:', error));
+//     }
+//
+//     // Handle click event for the "Information" link
+//     document.getElementById('information').addEventListener('click', function () {
+//         if (!markdownDisplayed) {
+//             // Load markdown content when "Information" is clicked
+//             loadMarkdown();
+//         }
+//         // Proceed with normal navigation after markdown is loaded or displayed
+//     });
+//
+//     // Other event listeners remain unchanged
+//     document.querySelectorAll('.topic-header').forEach(function (header) {
+//         header.addEventListener('click', function () {
+//             const topicId = this.id.split('-')[2];
+//             document.querySelectorAll(`.course-item[data-topic-id="${topicId}"]`).forEach(function (subtopic) {
+//                 subtopic.style.display = (subtopic.style.display === 'none') ? 'block' : 'none';
+//             });
+//         });
+//     });
+//
+//     document.querySelectorAll('.course-item').forEach(function (link) {
+//         link.addEventListener('click', function (event) {
+//             event.preventDefault(); // Prevent default link behavior
+//             const videoUrl = this.querySelector('h4').getAttribute('data-video');
+//             const videoTitle = this.textContent;
+//             displayVideo(videoUrl, videoTitle); // Display video content
+//         });
+//     });
+//
+//     document.querySelectorAll('.course-item').forEach(item => {
+//         item.addEventListener('mouseenter', () => {
+//             item.style.backgroundColor = '#f0f0f0';
+//             item.style.borderLeft = '5px solid #007bff';
+//         });
+//
+//         item.addEventListener('mouseleave', () => {
+//             item.style.backgroundColor = '';
+//             item.style.borderLeft = '';
+//         });
+//     });
+// });

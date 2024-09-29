@@ -1,9 +1,6 @@
 {% extends 'course_header.html' %}
 {% load static %}
-<html lang="en">
-{% block script %}
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-{% endblock %}
+
 {% block content %}
 <div class="sidebar-content-container">
     <!-- Sidebar -->
@@ -17,12 +14,8 @@
             {% endfor %}
         {% endfor %}
     </div>
-
-
     <div class="content">
-        <div id="content-area"></div>
         <h2 id="video-title"></h2>
-
         <video id="video-frame" preload="metadata" playsinline="" controls
                src="">
             <track default="" kind="metadata" src="">

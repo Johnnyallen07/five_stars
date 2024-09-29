@@ -1,0 +1,233 @@
+{% extends 'material_page.html' %}
+{% load customfilter %}
+{% block content %}
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card card-default rounded-0 shadow ">
+            <div class="card-header">
+                <div class="d-flex w-100 align-items-center justify-content-between">
+                    <h4 class="card-title fw-bold">My Uploaded Files</h4>
+                    <div class="tools">
+                        <button type="button" class="btn btn-primary rounded-0 bg-gradient btn-sm" id='add_new'><i
+                                class="fa fa-plus"></i> Add New
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <table class="table table-bordered" id="post-list">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="15%">
+                            <col width="25%">
+                            <col width="40%">
+                            <col width="15%">
+                        </colgroup>
+                        <thead>
+                        <tr class="bg-gradient bg-primary bg-opacity-50 text-light">
+                            <th class="px-2 py-2 text-center">#</th>
+                            <th class="px-2 py-2 text-center">Date/Time Uploaded</th>
+                            <th class="px-2 py-2 text-center">Title</th>
+                            <th class="px-2 py-2 text-center">FileName</th>
+                            <th class="px-2 py-2 text-center">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for post in posts %}
+                            <tr>
+                                <td class="px-2 py-1 align-middle">{{ forloop.counter }}</td>
+                                <td class="px-2 py-1 align-middle">{{ post.date_created|date:"Y-m-d h:i A" }}</td>
+                                <td class="px-2 py-1 align-middle">{{ post.title }}</td>
+                                <td class="px-2 py-1 align-middle"><p
+                                        class="m-0 text-truncate">{{ post.file_path|replaceBlank:"uploads/" }}</p></td>
+                                <td class="px-2 py-1 align-middle text-center">
+                                    <a class="btn btn-outline-primary btn-sm edit-data" href="javascript:void(0)"
+                                       data-id="{{ post.pk }}" title="Edit">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm delete-data" type="button"
+                                            data-id="{{ post.pk }}" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="uni_modal" role='dialog'>
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-sm btn-flat btn-primary rounded-0" id='submit'
+                            onclick="$('#uni_modal form').submit()">Save
+                    </button>
+                    <button type="button" class="btn btn-sm btn-flat btn-light border rounded-0"
+                            data-bs-dismiss="modal">Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirm_modal" role='dialog'>
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="delete_content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-flat btn-primary rounded-0" id='confirm' onclick="">
+                        Continue
+                    </button>
+                    <button type="button" class="btn btn-sm btn-flat btn-light border rounded-0"
+                            data-bs-dismiss="modal">Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        const loader = $('<div>')
+        loader.attr('id', 'pre-loader')
+        loader.html('<div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>')
+
+        window.start_loader = function () {
+            $('body').removeClass('loading')
+            if ($('#pre-loader').length > 0)
+                $('#pre-loader').remove();
+            $('body').append(loader)
+            $('body').addClass('loading')
+        }
+        window.end_loader = function () {
+            if ($('#pre-loader').length > 0)
+                $('#pre-loader').remove();
+            $('body').removeClass('loading')
+        }
+        window.uni_modal = function ($title = '', $url = '', $size = "") {
+            start_loader()
+            $.ajax({
+                url: $url,
+                error: err => {
+                    console.log()
+                    alert("An error occured")
+                },
+                success: function (resp) {
+                    if (resp) {
+                        $('#uni_modal .modal-title').html($title)
+                        $('#uni_modal .modal-body').html(resp)
+                        if ($size != '') {
+                            $('#uni_modal .modal-dialog').addClass($size + '  modal-dialog-centered')
+                        } else {
+                            $('#uni_modal .modal-dialog').removeAttr("class").addClass("modal-dialog modal-md modal-dialog-centered")
+                        }
+                        $('#uni_modal').modal({
+                            backdrop: 'static',
+                            keyboard: false,
+                            focus: true
+                        })
+                        $('#uni_modal').modal('show')
+                        end_loader()
+                    }
+                }
+            })
+        }
+        window._conf = function ($msg = '', $func = '', $params = []) {
+            $('#confirm_modal #confirm').attr('onclick', $func + "(" + $params.join(',') + ")")
+            $('#confirm_modal .modal-body').html($msg)
+            $('#confirm_modal').modal('show')
+        }
+        $(function () {
+            if ($('.redirect-msg').length > 0) {
+                setTimeout(() => {
+                    $('.redirect-msg').hide('slideUp')
+                    setTimeout(() => {
+                        $('.redirect-msg').remove()
+                    }, 500)
+                }, 3500)
+            }
+
+        })
+
+
+        $(function () {
+            $('#add_new').click(function () {
+                uni_modal('<i class="fa fa-plus"></i> Add Departmnet', '{% url "add-post" course.course_id %}', 'modal-md')
+            })
+            $('.edit-data').click(function () {
+                var post_id = $(this).attr('data-id')
+                var url = '{% url "manage-post" course.course_id 0 %}'.replace('0', post_id);
+                uni_modal('<i class="fa fa-edit"></i> Edit post', url, 'modal-md');
+            })
+            $('.delete-data').click(function () {
+                _conf("Are you sure to delete this post permanently?", "delete_post", [$(this).attr('data-id')])
+            })
+
+            $('#post-list').DataTable({
+                columnDefs: [{
+                    orderable: false,
+                    targets: 4
+                }],
+                initComplete: function (settings, json) {
+                    $('table td, table th').addClass('px-2 py-1')
+                },
+                drawCallback: function (settings) {
+                    $('table td, table th').addClass('px-2 py-1')
+                }
+            })
+        })
+
+        function delete_post($id) {
+            start_loader();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            $.ajax({
+                url: '{% url "delete-post" %}',
+                headers: {
+                    'X-CSRFToken': "{{csrf_token}}"
+                },
+                method: 'POST',
+                data: {
+                    id: $id
+                },
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    el.text('An error occurred.')
+                    el.show('slow')
+                    end_loader()
+                },
+                success: function (resp) {
+                    if (resp.status == 'success') {
+                        location.reload()
+                    } else if (!!resp.msg) {
+                        el.text('An error occurred.')
+                        el.show('slow')
+                    } else {
+                        el.text('An error occurred.')
+                        el.show('slow')
+                    }
+                    end_loader()
+                }
+            })
+        }
+    </script>
+
+{% endblock %}
