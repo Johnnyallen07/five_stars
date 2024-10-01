@@ -43,6 +43,7 @@ document.querySelectorAll('.course-item').forEach(function (link) {
         event.preventDefault(); // Prevent default link behavior
         const videoUrl = this.querySelector('h4').getAttribute('data-video');
         const videoTitle = this.textContent;
+        console.log(videoUrl)
         displayVideo(videoUrl, videoTitle); // Display video and remove markdown
     });
 });

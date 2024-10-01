@@ -166,7 +166,7 @@
 
         $(function () {
             $('#add_new').click(function () {
-                uni_modal('<i class="fa fa-plus"></i> Add Departmnet', '{% url "add-post" course.course_id %}', 'modal-md')
+                uni_modal('<i class="fa fa-plus"></i> Add Material', '{% url "add-post" course.course_id %}', 'modal-md')
             })
             $('.edit-data').click(function () {
                 var post_id = $(this).attr('data-id')

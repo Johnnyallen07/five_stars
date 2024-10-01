@@ -57,11 +57,4 @@ document.getElementById('submit-btn').addEventListener('click', function () {
 
     document.getElementById('combined-form').submit();
 
-
 });
-// document.getElementById('subjects-form').addEventListener('submit', function (event) {
-//     console.log("Form submission triggered");
-//     event.preventDefault(); // Prevent default form submission
-//
-//         // this.submit(); // Submit the form after handling
-// });

@@ -7,8 +7,6 @@
     <title>Learning Platform</title>
     {% block css %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/course_layout.css' %}">
-    <script src="{% static 'js/course.js' %}"></script>
-    {% block script %}{% endblock %}
 
 </head>
 <body>
@@ -23,5 +21,7 @@
     {% endif %}
 </div>
 {% block content %}{% endblock %}
+
+{% block script %}{% endblock %}
 </body>
 </html>

@@ -1,14 +1,11 @@
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 
 from learning.models import Course
-from learning.views import course_layout_view
+from teacher.forms import TeacherForm
 from teacher.models import Teacher
 from .forms import RegisterForm, TeacherRegisterForm
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
-
-from .models import CustomUser
 
 
 def login_view(request):
@@ -43,13 +40,47 @@ def register_view(request):
 def teacher_register_view(request):
     if request.method == 'POST':
         form = TeacherRegisterForm(request.POST)
+
         if form.is_valid():
-            form.save()
-            return redirect('login')  # Redirect after successful registration
+            teacher_form_data = form.cleaned_data
+            request.session['teacher_form_data'] = teacher_form_data
+            return redirect('teacher-register-profile')
     else:
         form = TeacherRegisterForm()
 
     return render(request, 'teacher_register.html', {'form': form})
+
+
+def teacher_register_profile(request):
+    teacher_form_data = request.session.get('teacher_form_data')
+    if request.method == 'POST':
+        profile_form = TeacherForm(request.POST)
+
+        if profile_form.is_valid():
+            # retrieve data from the teacher form
+
+            teacher_form = TeacherRegisterForm(teacher_form_data)
+
+            # teacher form depends on the customUser for login
+            teacher_user = teacher_form.save()
+            # profile form depends on the Teacher Model
+            teacher_model = profile_form.save(commit=False)
+            teacher_model.teacher_id = teacher_user.id
+            teacher_model.teacher_name = teacher_form_data.get('username')
+            teacher_model.email = teacher_form_data.get('email')
+            teacher_model.save()
+
+            del request.session['teacher_form_data']
+            return redirect('login')
+        else:
+            subjects_string = request.POST.get('subjects', '')
+            subjects_list = subjects_string.split(',') if subjects_string else []
+            return render(request, 'teacher_register_profile.html', {'form': profile_form, 'subjects': subjects_list})
+
+    else:
+        profile_form = TeacherForm()
+
+    return render(request, 'teacher_register_profile.html', {'form': profile_form})
 
 
 def purchase(request):
@@ -68,5 +99,5 @@ def home_view(request):
 
 def dashboard_view(request):
     teacher_id = request.session.get('teacher_id')
-    teacher = get_object_or_404(CustomUser, id=teacher_id)
+    teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
     return render(request, 'dashboard.html', {'teacher': teacher})

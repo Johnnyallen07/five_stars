@@ -6,7 +6,7 @@ from .models import Teacher
 
 
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'school')
+    list_display = ('teacher_name', 'first_name', 'last_name', 'email', 'school')
     search_fields = ('first_name', 'last_name', 'email')
     list_filter = ('school',)
     ordering = ('last_name', 'first_name')
@@ -14,7 +14,7 @@ class TeacherAdmin(admin.ModelAdmin):
     # Optional: Customizing form layout
     fieldsets = (
         (None, {
-            'fields': ('first_name', 'last_name', 'email', 'school')
+            'fields': ('teacher_name', 'first_name', 'last_name', 'email', 'school')
         }),
         ('Advanced options', {
             'classes': ('collapse',),

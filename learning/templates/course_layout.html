@@ -1,27 +1,30 @@
 {% extends 'course_header.html' %}
 {% load static %}
 
+
 {% block content %}
-<div class="sidebar-content-container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        {% for topic in topics %}
-            <h2 class="topic-header" id="toggle-topic-{{ topic.id }}">{{ topic.title }}</h2>
-            {% for subtopic in topic.subtopics.all %}
-                <div class="course-item" data-topic-id="{{ topic.id }}">
-                    <h4 data-video="{{ subtopic.video_url }}">{{ subtopic.title }}</h4>
-                </div>
+    <div class="sidebar-content-container">
+        <div class="sidebar">
+            {% for topic in topics %}
+                <h2 class="topic-header" id="toggle-topic-{{ topic.id }}">{{ topic.title }}</h2>
+                {% for subtopic in topic.subtopics.all %}
+                    <div class="course-item" data-topic-id="{{ topic.id }}">
+                        <h4 data-video="{{ subtopic.video_url }}">{{ subtopic.title }}</h4>
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+        </div>
+        <div class="content">
+            <h2 id="video-title"></h2>
+            <video id="video-frame" preload="metadata" playsinline="" controls
+                   src="">
+                <track default="" kind="metadata" src="">
+            </video>
+        </div>
     </div>
-    <div class="content">
-        <h2 id="video-title"></h2>
-        <video id="video-frame" preload="metadata" playsinline="" controls
-               src="">
-            <track default="" kind="metadata" src="">
-        </video>
-    </div>
-</div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/course.js' %}"></script>
 {% endblock %}
 
 

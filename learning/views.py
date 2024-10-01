@@ -19,27 +19,32 @@ def course_layout_view(request, course, user):
 
 def course_access(request, course_id):
     course = get_object_or_404(Course, course_id=course_id)
-    # Check if the user is authenticated and has purchased the course
     user = cast(CustomUser, request.user)
     if user.is_authenticated and course in user.subscriptions.all():
         # If the user has access, redirect to the topics page
         return course_layout_view(request, course, user)
     else:
-        # If the user hasn't purchased the course, redirect to the purchase page
         return redirect(reverse('purchase'))
 
 
 def material_page(request, course_id):
     course = get_object_or_404(Course, course_id=course_id)
+    user = cast(CustomUser, request.user)
+    if course not in user.subscriptions.all():
+        return redirect(reverse('purchase'))
     posts = MaterialPost.objects.filter(course_title=course).all()
     context = {'posts': posts, 'postsLen': posts.count(), 'course': course}
     return render(request, 'material_page.html', context)
 
 
 def upload_page(request, course_id):
+    user = cast(CustomUser, request.user)
+    if not user.is_teacher:
+        return redirect(reverse('course_material', args=[course_id]))
     course = get_object_or_404(Course, course_id=course_id)
     posts = MaterialPost.objects.filter(course_title=course).all()
     context = {'posts': posts, 'postsLen': posts.count(), 'course': course}
+
     return render(request, 'upload_page.html', context)
 
 

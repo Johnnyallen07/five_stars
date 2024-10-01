@@ -23,7 +23,7 @@
             </div>
         {% endif %}
         <form method="post">
-            {% _token %}
+            {% csrf_token %}
 
             <label for="username">Username:</label>
             {{ form.username }}
@@ -49,3 +49,5 @@
     </div>
 </body>
 </html>
+
+
