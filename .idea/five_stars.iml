@@ -32,7 +32,7 @@
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/../five_stars\templates" />
+        <option value="$MODULE_DIR$/user/templates" />
       </list>
     </option>
   </component>

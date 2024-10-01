@@ -14,8 +14,8 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            request.session['id'] = user.id
             if user.is_teacher:
-                request.session['teacher_id'] = user.id
                 return redirect('dashboard')
             else:
                 return redirect('home')
@@ -98,6 +98,6 @@ def home_view(request):
 
 
 def dashboard_view(request):
-    teacher_id = request.session.get('teacher_id')
+    teacher_id = request.session.get('id')
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
     return render(request, 'dashboard.html', {'teacher': teacher})

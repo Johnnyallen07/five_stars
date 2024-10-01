@@ -16,4 +16,5 @@ urlpatterns = [
   path('', views.home_page, name='index'),
   path('', include('learning.urls')),
   path('', include('teacher.urls')),
+  path('', include('user.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
