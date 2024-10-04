@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Teacher
+from .models import Teacher, TeacherSchedule
 
 
 class TeacherAdmin(admin.ModelAdmin):
@@ -27,3 +27,10 @@ class TeacherAdmin(admin.ModelAdmin):
 
 # Register the Teacher model with the admin site
 admin.site.register(Teacher, TeacherAdmin)
+
+
+class TeacherScheduleAdmin(admin.ModelAdmin):
+    list_display = ('teacher', 'slots')
+
+
+admin.site.register(TeacherSchedule, TeacherScheduleAdmin)

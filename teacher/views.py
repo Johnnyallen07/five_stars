@@ -1,8 +1,11 @@
-from django.shortcuts import get_object_or_404, render, redirect
+import json
+import os
+
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 
 from five_stars.models import CustomUser
-from teacher.forms import TeacherForm
-from teacher.models import Teacher
+from teacher.forms import TeacherForm, TeacherScheduleForm
+from teacher.models import Teacher, TeacherSchedule
 
 
 def teacher_page(request, teacher_id):
@@ -12,17 +15,77 @@ def teacher_page(request, teacher_id):
 
 
 def teacher_profile(request):
-    teacher_id = request.session.get('teacher_id')
+    teacher_id = request.session.get('id')
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
+
     subjects_list = teacher.subjects.split(',')
     if request.method == 'POST':
-        form = TeacherForm(request.POST, instance=teacher)
+        form = TeacherForm(request.POST, request.FILES, instance=teacher)
         if form.is_valid():
-            form.save()
-            # Optionally add a success message or redirect
+            # Get the cleaned data
+            cleaned_data = form.cleaned_data
+
+            # Save the image to CustomUser
+            image = cleaned_data.pop('image', None)
+            user = request.user
+            image.name = f"teacher_{teacher.teacher_name}.png"
+            if image and os.path.isfile(user.image.path):
+                os.remove(user.image.path)
+            user.image = image
+            user.save()
+
+            # Save the rest of the data to Teacher
+            teacher_data = cleaned_data.copy()
+            teacher_data['teacher_id'] = user.id  # Assuming teacher_id is the same as user.id
+            Teacher.objects.update_or_create(
+                teacher_id=user.id,
+                defaults=teacher_data
+            )
             return redirect('dashboard')
         else:
             return render(request, 'teacher_profile.html', {'subjects': subjects_list, 'form': form})
     else:
         form = TeacherForm(instance=teacher)
-    return render(request, 'teacher_profile.html', {'subjects': subjects_list, 'form': form})
+
+        # The teacher image is an url to the media/user_images
+        teacher_image = get_object_or_404(CustomUser, id=teacher_id).image
+        teacher_image_url = teacher_image.url
+        default_image_url = '/media/user_images/default.png'
+
+        # Check if teacher_image exists and the file exists on the server
+        if not (teacher_image and os.path.exists(teacher_image.path)):
+            teacher_image_url = default_image_url
+
+    return render(request, 'teacher_profile.html',
+                  {'subjects': subjects_list, 'form': form, 'teacher_image_url': teacher_image_url})
+
+
+import json
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Teacher, TeacherSchedule
+
+
+def teacher_schedule(request):
+    teacher_id = request.session.get('id')
+    teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
+
+    # Try to get the existing schedule or initialize to None
+    try:
+        schedule = TeacherSchedule.objects.get(teacher=teacher)
+    except TeacherSchedule.DoesNotExist:
+        schedule = TeacherSchedule()
+        schedule.teacher = teacher
+
+    if request.method == 'POST':
+        # Get the slots data from the hidden input field
+        slots_data = request.POST.get('slots')
+        slots = json.loads(slots_data)
+        schedule.slots = slots
+
+        schedule.save()
+        return redirect('dashboard')
+
+    else:
+        # Prepare the existing slots for rendering in the template
+        slots_json = json.dumps(schedule.slots) if schedule else '[]'
+        return render(request, 'teacher_schedule.html', {'schedule': schedule, 'slots_json': slots_json})

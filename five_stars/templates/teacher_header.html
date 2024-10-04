@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Header{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+    {% block styles %}{% endblock %}
+</head>
+<body>
+
+<!-- Header with Icon and User Profile -->
+<div class="navbar-container">
+    <div class="header">
+        <!-- Website Icon on the left -->
+        <img src="{% static 'img/Coursera_logo.png' %}" alt="Website Logo" style="height: 20px; width: auto;">
+    </div>
+
+    <!-- Navigation Bar below the header -->
+
+    <nav class="navbar">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'teacher-profile' %}">Profile</a>
+        <a href="{% url 'teacher-schedule' %}">Schedule</a>
+    </nav>
+
+</div>
+<div class="content-container">
+    {% block content %}
+    {% endblock %}
+</div>
+{% block script %}
+{% endblock %}
+</body>
+</html>

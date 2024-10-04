@@ -47,7 +47,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'https://110.40.142.227',
-    
+    'https://starseducation.site',
+
 ]
 
 TEMPLATES = [

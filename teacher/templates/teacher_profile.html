@@ -1,4 +1,4 @@
-{% extends 'header.html' %}
+{% extends 'teacher_header.html' %}
 {% load static %}
 {% block title %}Teacher Profile{% endblock %}
 {% block styles %}
@@ -21,7 +21,7 @@
                     <h3>Personal Image</h3>
 
                     <div class="image-container">
-                        <img id="photoPreview" alt="Your Photo" style="display: none;">
+                        <img id="photoPreview" src="{{ teacher_image_url }}" alt="Your Photo" style="" data-image-url="{{ teacher_image_url }}">
                     </div>
 
 
@@ -29,7 +29,7 @@
                             onclick="document.getElementById('photoInput').click();">Upload Photo
                     </button>
                     <input type="file" id="photoInput" accept="image/*" onchange="previewImage()"
-                           style="display: none;">
+                           style="display: none;" name="image">
 
 
                     <h6>Tips: Enlarge, move the Image inside the circle</h6>
@@ -117,4 +117,6 @@
 {% block script %}
     <script src="{% static 'js/subjects.js' %} "></script>
     <script src="{% static 'js/personal_image.js' %}" defer></script>
+    <script src="{% static 'js/sumit_btn.js' %}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 {% endblock %}

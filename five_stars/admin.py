@@ -10,7 +10,7 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     # Define which fields are displayed on the user detail page
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
+        (None, {'fields': ('username', 'password', 'image')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_teacher', 'is_superuser', 'subscriptions')}),
         ('Important Dates', {'fields': ('last_login', 'date_joined')}),
     )

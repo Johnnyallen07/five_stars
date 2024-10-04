@@ -14,3 +14,11 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.first_name
+
+
+class TeacherSchedule(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    slots = models.JSONField(default=list)  # Stores an array of slots as JSON
+
+    def __str__(self):
+        return f"{self.teacher_id}_schedule"

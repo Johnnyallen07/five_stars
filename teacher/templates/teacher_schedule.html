@@ -1,0 +1,46 @@
+{% extends 'teacher_header.html' %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/teacher_schedule.css' %}">
+{% endblock %}
+
+{% block script %}
+    <script>
+        var existingSlots = {{ slots_json|safe }};
+    </script>
+    <script src="{% static 'js/teacher_schedule.js' %} "></script>
+
+{% endblock %}
+{% block content %}
+    <h1>Teacher's Schedule</h1>
+    <div class="teacher-schedule-container">
+
+
+        <!-- Left: Available Slots -->
+        <div class="available-slots">
+            <h2>Available Time Slots</h2>
+            <ul id="slotList" class="slot-list">
+                <li class="empty-message">No time slots available yet.</li>
+            </ul>
+        </div>
+
+        <!-- Right: Time Slot Form -->
+        <div class="schedule-form">
+            <h2>Select Your Time Slot</h2>
+            <label for="startTime">Start Time:</label>
+            <input type="datetime-local" id="startTime" required>
+
+            <label for="endTime">End Time:</label>
+            <input type="datetime-local" id="endTime" required>
+
+            <button id="addSlotBtn" class="add-slot-button">Add Time Slot</button>
+
+            <!-- Submit form -->
+            <form id="scheduleForm" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="slots" name="slots" value="">
+                <button type="submit" id="submitScheduleBtn" class="submit-btn">Submit Schedule</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
