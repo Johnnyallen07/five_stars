@@ -56,27 +56,13 @@ document.getElementById('submit-btn').addEventListener('click', function () {
     // Draw the cropped image area
     croppedCtx.drawImage(canvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 
-    // Convert the cropped canvas to a Blob and append it to the form data
-    croppedCanvas.toBlob(function (blob) {
-        // Create a new FormData object to hold form data
-        let formData = new FormData(document.getElementById('combined-form'));
-
-        // Append the image blob to the form data
-        formData.append('image', blob, 'profile-image.png');
-
-        // Submit the form via AJAX
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', window.location.href, true);
-        xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                // Handle success
-                console.log('Form submitted successfully.');
-            } else {
-                // Handle error
-                console.log('Error submitting the form.');
-            }
-        };
-        xhr.send(formData);
-    }, 'image/png');
+    // Convert the cropped canvas to data URL and set it to the hidden input
+    const imageBlob = croppedCanvas.toDataURL('image/png');
+    const imageInput = document.createElement('input');
+    imageInput.type = 'hidden';
+    imageInput.name = 'image'; // Set the name attribute for the form
+    imageInput.id = 'image'; // Set the id for future reference
+    document.getElementById('combined-form').appendChild(imageInput);
+    imageInput.value = imageBlob;
+    document.getElementById('combined-form').submit();
 });

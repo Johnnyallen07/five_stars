@@ -64,12 +64,17 @@
                 <div class="introduction-text">{{ teacher.introduction }}</div>
             </div>
         </div>
-        <h2>Activities</h2>
-        <div class="activities-box">
-
-        </div>
         <h2>Schedule</h2>
         <div class="schedule-box">
+                {% if schedule %}
+        <ul>
+            {% for slot in schedule %}
+                <li>{{ slot }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No schedule available.</p>
+    {% endif %}
         </div>
     </div>
 

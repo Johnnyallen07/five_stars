@@ -1,8 +1,6 @@
 import json
 import os
-
 from django.shortcuts import get_object_or_404, render, redirect, reverse
-
 from five_stars.models import CustomUser
 from teacher.forms import TeacherForm, TeacherScheduleForm
 from teacher.models import Teacher, TeacherSchedule
@@ -10,13 +8,21 @@ from teacher.models import Teacher, TeacherSchedule
 
 def teacher_page(request, teacher_id):
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
-    subjects_list = teacher.subjects.split(',')  # Split the subjects
+    subjects_list = teacher.subjects.split(',')
+    schedule = TeacherSchedule.objects.get(teacher=teacher)
     return render(request, 'teacher_page.html', {'teacher': teacher, 'subjects': subjects_list})
 
 
 def teacher_profile(request):
     teacher_id = request.session.get('id')
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
+    teacher_image = get_object_or_404(CustomUser, id=teacher_id).image
+    teacher_image_url = teacher_image.url
+    default_image_url = '/media/user_images/default.png'
+
+    # Check if teacher_image exists and the file exists on the server
+    if not (teacher_image and os.path.exists(teacher_image.path)):
+        teacher_image_url = default_image_url
 
     subjects_list = teacher.subjects.split(',')
     if request.method == 'POST':
@@ -47,22 +53,8 @@ def teacher_profile(request):
     else:
         form = TeacherForm(instance=teacher)
 
-        # The teacher image is an url to the media/user_images
-        teacher_image = get_object_or_404(CustomUser, id=teacher_id).image
-        teacher_image_url = teacher_image.url
-        default_image_url = '/media/user_images/default.png'
-
-        # Check if teacher_image exists and the file exists on the server
-        if not (teacher_image and os.path.exists(teacher_image.path)):
-            teacher_image_url = default_image_url
-
     return render(request, 'teacher_profile.html',
                   {'subjects': subjects_list, 'form': form, 'teacher_image_url': teacher_image_url})
-
-
-import json
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Teacher, TeacherSchedule
 
 
 def teacher_schedule(request):
