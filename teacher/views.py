@@ -1,5 +1,8 @@
+import base64
 import json
 import os
+
+from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from five_stars.models import CustomUser
 from teacher.forms import TeacherForm, TeacherScheduleForm
@@ -31,18 +34,18 @@ def teacher_profile(request):
             # Get the cleaned data
             cleaned_data = form.cleaned_data
 
-            # Save the image to CustomUser
-            image = cleaned_data.pop('image', None)
+            image_data = request.POST.get('image')
+            format, imgstr = image_data.split(';base64,')
+            ext = format.split('/')[-1]
+
             user = request.user
-            image.name = f"teacher_{teacher.teacher_name}.png"
-            if image and os.path.isfile(user.image.path):
-                os.remove(user.image.path)
+            image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{user.get_username()}.{ext}""")
             user.image = image
             user.save()
 
             # Save the rest of the data to Teacher
             teacher_data = cleaned_data.copy()
-            teacher_data['teacher_id'] = user.id  # Assuming teacher_id is the same as user.id
+            teacher_data['teacher_id'] = user.id
             Teacher.objects.update_or_create(
                 teacher_id=user.id,
                 defaults=teacher_data

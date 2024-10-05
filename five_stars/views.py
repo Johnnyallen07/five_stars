@@ -65,20 +65,18 @@ def teacher_register_profile(request):
         profile_form = TeacherForm(request.POST)
 
         if profile_form.is_valid():
-            try:
-                image_data = request.POST.get('image')
-                format, imgstr = image_data.split(';base64,')
-                ext = format.split('/')[-1]
-                image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{teacher_form_data['username']}.{ext}""")
-            except Exception as e:
-                # Handle image processing errors
-                print(f"Image processing error: {e}")
-                image = None  # Or set a default image
+
+            image_data = request.POST.get('image')
+            format, imgstr = image_data.split(';base64,')
+            ext = format.split('/')[-1]
+            image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{teacher_form_data['username']}.{ext}""")
+
             # teacher form depends on the customUser for login
             teacher_user = CustomUser(
                 username=teacher_form_data['username'],
                 email=teacher_form_data['email'],
-                image=image
+                image=image,
+                is_teacher=True
             )
             teacher_user.set_password(teacher_form_data['password2'])
             teacher_user.save()
