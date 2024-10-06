@@ -1,8 +1,86 @@
 {% extends 'teacher_header.html' %}
+{% load static %}
 {% block title %}Home{% endblock %}
-
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
+    <div class="dashboard-container">
+
+        <!-- Stats Section -->
+        <div class="stats-container">
+            <div class="box">
+                <h3>Total Teaching Hours</h3>
+                <p>120 Hours</p>
+            </div>
+            <div class="box">
+                <h3>Courses Taken</h3>
+                <p>8 Courses</p>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="main-content">
+            <!-- Left Column - Upcoming Courses -->
+            <div class="left-column">
+                <h2>Upcoming Courses</h2>
+                {% for reserved_slot in reserved_slots %}
+                    <div class="course-item">
+                        <h4>{{ reserved_slot.subject }}</h4>
+                        <div class="course-details">
+                            <p><span>Start Time:</span> {{ reserved_slot.start }} </p>
+                            <p><span>End Time:</span> {{ reserved_slot.end }} </p>
+                            <p><span>Student:</span> john_doe</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Recent Completed Courses -->
+                <div class="sub-section">
+                    <h2>Recent Completed Courses</h2>
+                    <div class="sub-course-item">
+                        <h4>Introduction to HTML & CSS</h4>
+                        <div class="sub-course-details">
+                            <p><span>Completed On:</span> 10th September 2024</p>
+                            <p><span>Student:</span> mark_twain</p>
+                        </div>
+                    </div>
+                    <div class="sub-course-item">
+                        <h4>JavaScript Essentials</h4>
+                        <div class="sub-course-details">
+                            <p><span>Completed On:</span> 5th October 2024</p>
+                            <p><span>Student:</span> emily_clark</p>
+                        </div>
+                    </div>
+                    <!-- Add more completed courses as needed -->
+                </div>
+
+                <!-- Missing Courses -->
+                <div class="sub-section">
+                    <h2>Missing Courses</h2>
+                    <div class="sub-course-item">
+                        <h4>Database Management Systems</h4>
+                        <div class="sub-course-details">
+                            <p><span>Missing Since:</span> 1st October 2024</p>
+                            <p><span>Student:</span> michael_brown</p>
+                        </div>
+                    </div>
+                    <div class="sub-course-item">
+                        <h4>Network Security</h4>
+                        <div class="sub-course-details">
+                            <p><span>Missing Since:</span> 12th October 2024</p>
+                            <p><span>Student:</span> sarah_jones</p>
+                        </div>
+                    </div>
+                    <!-- Add more missing courses as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 {% endblock %}

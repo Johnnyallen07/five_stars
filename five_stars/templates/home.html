@@ -5,19 +5,19 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 {% block content %}
-    <h2 class="section-title">Current Products</h2>
-    <div class="course-grid">
-        {% for course in courses %}
-
-            <div class="course-box">
-                <a href="{% url 'course' course.course_id %}">
-                    <img src="{{ course.image_url }}" alt="{{ course.title }}">
-                    <h4>{{ course.title }}</h4>
-                </a>
-            </div>
-
-        {% endfor %}
-    </div>
+{#    <h2 class="section-title">Current Products</h2>#}
+{#    <div class="course-grid">#}
+{#        {% for course in courses %}#}
+{##}
+{#            <div class="course-box">#}
+{#                <a href="{% url 'course' course.course_id %}">#}
+{#                    <img src="{{ course.image_url }}" alt="{{ course.title }}">#}
+{#                    <h4>{{ course.title }}</h4>#}
+{#                </a>#}
+{#            </div>#}
+{##}
+{#        {% endfor %}#}
+{#    </div>#}
     <h2 class="section-title">Available Teachers</h2>
     <div class="teacher-grid">
         {% for teacher in teachers %}

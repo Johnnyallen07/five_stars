@@ -18,7 +18,9 @@ class Teacher(models.Model):
 
 class TeacherSchedule(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    slots = models.JSONField(default=list)  # Stores an array of slots as JSON
+    available_slots = models.JSONField(default=list)
+    reserved_slots = models.JSONField(default=list)
+    missed_slots = models.JSONField(default=list)
 
     def __str__(self):
         return f"{self.teacher_id}_schedule"

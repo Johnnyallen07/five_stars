@@ -49,37 +49,19 @@ h1 {
     list-style-type: none;
 }
 
-.slot-list li {
-    background-color: #f4f4f4;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-left: 4px solid #4CAF50;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+/*.slot-list li {*/
+/*    background-color: #f4f4f4;*/
+/*    margin-bottom: 10px;*/
+/*    padding: 10px;*/
+/*    border-left: 4px solid #4CAF50;*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*}*/
 
-.slot-list li span {
-    flex: 1;
-}
-
-.slot-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.slot-buttons button {
-    padding: 5px 10px;
-    border: none;
-    background-color: #f44336;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.slot-buttons button:hover {
-    background-color: #d32f2f;
-}
+/*.slot-list li span {*/
+/*    flex: 1;*/
+/*}*/
 
 .schedule-form h2 {
     font-size: 20px;
@@ -134,4 +116,51 @@ button:hover {
 .empty-message {
     color: #999;
     font-style: italic;
+}
+
+
+.time-slot {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.slot-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.slot-label {
+    font-weight: bold;
+    color: #4CAF50;
+    margin-bottom: 5px;
+}
+
+.slot-time {
+    font-size: 16px;
+    color: #333;
+}
+
+
+.delete-btn {
+    background-color: #f44336;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
 }

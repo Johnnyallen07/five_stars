@@ -1,4 +1,5 @@
 import base64
+import json
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
@@ -8,7 +9,7 @@ from django.http import JsonResponse
 
 from learning.models import Course
 from teacher.forms import TeacherForm
-from teacher.models import Teacher
+from teacher.models import Teacher, TeacherSchedule
 from . import settings
 from .forms import RegisterForm, TeacherRegisterForm
 from django.shortcuts import render, redirect, get_object_or_404, reverse
@@ -116,4 +117,9 @@ def home_view(request):
 def dashboard_view(request):
     teacher_id = request.session.get('id')
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
-    return render(request, 'dashboard.html', {'teacher': teacher})
+    teacher_schedule = get_object_or_404(TeacherSchedule, teacher=teacher)
+    # teacher_schedule_json = json.dumps(teacher_schedule.available_slots) if teacher_schedule else '[]'
+    return render(request, 'dashboard.html',
+                  {'teacher': teacher,
+                   'teacher_schedule': teacher_schedule,
+                   'reserved_slots': teacher_schedule.reserved_slots})

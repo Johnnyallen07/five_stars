@@ -13,7 +13,35 @@ def teacher_page(request, teacher_id):
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
     subjects_list = teacher.subjects.split(',')
     schedule = TeacherSchedule.objects.get(teacher=teacher)
-    return render(request, 'teacher_page.html', {'teacher': teacher, 'subjects': subjects_list})
+    try:
+        slots_list = schedule.available_slots
+    except TeacherSchedule.DoesNotExist:
+        slots_list = []
+
+    teacher_image_url = get_object_or_404(CustomUser, id=teacher_id).image.url
+
+    if request.method == 'POST':
+        reserved_slot = request.POST['slot']
+        reserved_slot_dict = json.loads(reserved_slot)
+        slots_list.remove(reserved_slot_dict)
+
+        subject = request.POST['subject']
+
+        reserved_slot_dict['subject'] = subject
+        try:
+            reversed_slots = schedule.reversed_slots
+        except TeacherSchedule.DoesNotExist:
+            reversed_slots = []
+
+        reversed_slots.append(reserved_slot_dict)
+
+        schedule.available_slots = slots_list
+        schedule.reversed_slots = reversed_slots
+
+        schedule.save()
+
+    return render(request, 'teacher_page.html', {'teacher': teacher, 'teacher_image_url': teacher_image_url,
+                                                 'subjects': subjects_list, 'slots': slots_list})
 
 
 def teacher_profile(request):
@@ -39,6 +67,10 @@ def teacher_profile(request):
             ext = format.split('/')[-1]
 
             user = request.user
+
+            if user.image and os.path.exists(user.image.path):
+                os.remove(user.image.path)
+
             image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{user.get_username()}.{ext}""")
             user.image = image
             user.save()
@@ -52,7 +84,8 @@ def teacher_profile(request):
             )
             return redirect('dashboard')
         else:
-            return render(request, 'teacher_profile.html', {'subjects': subjects_list, 'form': form})
+            return render(request, 'teacher_profile.html',
+                          {'subjects': subjects_list, 'form': form, 'teacher_image_url': teacher_image_url})
     else:
         form = TeacherForm(instance=teacher)
 
@@ -72,15 +105,15 @@ def teacher_schedule(request):
         schedule.teacher = teacher
 
     if request.method == 'POST':
-        # Get the slots data from the hidden input field
         slots_data = request.POST.get('slots')
         slots = json.loads(slots_data)
-        schedule.slots = slots
+
+        schedule.available_slots = slots
 
         schedule.save()
         return redirect('dashboard')
 
     else:
         # Prepare the existing slots for rendering in the template
-        slots_json = json.dumps(schedule.slots) if schedule else '[]'
+        slots_json = json.dumps(schedule.available_slots) if schedule else '[]'
         return render(request, 'teacher_schedule.html', {'schedule': schedule, 'slots_json': slots_json})

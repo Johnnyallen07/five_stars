@@ -36,9 +36,10 @@ function previewImage() {
         reader.readAsDataURL(input.files[0]);
     } else {
         // When no new image is selected, ensure the original image from the database is used
-        if (preview.src === "") {
-            preview.src = preview.getAttribute('data-image-url');
-        }
+       const dataImageUrl = preview.getAttribute('data-image-url');
+            preview.src = dataImageUrl;
+            img.src = dataImageUrl;
+        
     }
 }
 

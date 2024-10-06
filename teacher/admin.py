@@ -30,7 +30,7 @@ admin.site.register(Teacher, TeacherAdmin)
 
 
 class TeacherScheduleAdmin(admin.ModelAdmin):
-    list_display = ('teacher', 'slots')
+    list_display = ('teacher', 'available_slots')
 
 
 admin.site.register(TeacherSchedule, TeacherScheduleAdmin)

@@ -18,6 +18,18 @@ function deleteSlot(index) {
     renderSlots();
 }
 
+
+const formatDateWithoutSeconds = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
+
 function renderSlots() {
     const slotList = document.getElementById('slotList');
     slotList.innerHTML = '';
@@ -30,13 +42,21 @@ function renderSlots() {
         slots.forEach((slot, index) => {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
-            <span>From: ${new Date(slot.start).toLocaleString()} To: ${new Date(slot.end).toLocaleString()}</span>
-            <div class="slot-buttons">
-              <button onclick="deleteSlot(${index})">Delete</button>
-            </div>
-          `;
+    <div class="time-slot">
+        <div class="slot-header">
+            <span class="slot-label">Start Time:</span>
+            <span class="slot-time">${formatDateWithoutSeconds(slot.start)}</span>
+        </div>
+        <div class="slot-header">
+            <span class="slot-label">End Time:</span>
+            <span class="slot-time">${formatDateWithoutSeconds(slot.end)}</span>
+        </div>
+        <button class="delete-btn" onclick="deleteSlot(${index})">Delete</button>
+    </div>
+  `;
             slotList.appendChild(listItem);
         });
+
     }
 }
 
@@ -85,8 +105,6 @@ document.getElementById('addSlotBtn').addEventListener('click', function (event)
 document.getElementById('scheduleForm').addEventListener('submit', function (event) {
     // Prevent the default form submission
     event.preventDefault();
-
-    // Set the hidden input with the slots array
     document.getElementById('slots').value = JSON.stringify(slots);
 
     // Submit the form

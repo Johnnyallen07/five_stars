@@ -22,7 +22,7 @@ class TeacherForm(forms.ModelForm):
 class TeacherScheduleForm(forms.ModelForm):
     class Meta:
         model = TeacherSchedule
-        fields = ['slots']
+        fields = ['available_slots']
         widgets = {
-            'slots': forms.HiddenInput()  # Slots will be set via JavaScript and hidden in the form
+            'available_slots': forms.HiddenInput()  # Slots will be set via JavaScript and hidden in the form
         }
