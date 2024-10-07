@@ -7,38 +7,63 @@ from django.shortcuts import get_object_or_404, render, redirect, reverse
 from five_stars.models import CustomUser
 from teacher.forms import TeacherForm, TeacherScheduleForm
 from teacher.models import Teacher, TeacherSchedule
+from user.models import UserSchedule
 
 
 def teacher_page(request, teacher_id):
+    user_id = request.session.get('id')
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
     subjects_list = teacher.subjects.split(',')
-    schedule = TeacherSchedule.objects.get(teacher=teacher)
     try:
-        slots_list = schedule.available_slots
+        teacher_schedule = TeacherSchedule.objects.get(teacher=teacher)
+    except TeacherSchedule.DoesNotExist:
+        teacher_schedule = TeacherSchedule()
+        teacher_schedule.teacher = teacher
+    try:
+        slots_list = teacher_schedule.available_slots
     except TeacherSchedule.DoesNotExist:
         slots_list = []
 
     teacher_image_url = get_object_or_404(CustomUser, id=teacher_id).image.url
 
     if request.method == 'POST':
-        reserved_slot = request.POST['slot']
-        reserved_slot_dict = json.loads(reserved_slot)
-        slots_list.remove(reserved_slot_dict)
+        # save to user schedules
 
-        subject = request.POST['subject']
+        # add username to teacher slot, add teacher_name to user slot
+        reserved_slot: dict = json.loads(request.POST['slot'])
 
-        reserved_slot_dict['subject'] = subject
+        user = get_object_or_404(CustomUser, id=user_id)
         try:
-            reversed_slots = schedule.reversed_slots
+            user_schedule = UserSchedule.objects.get(user=user)
+        except UserSchedule.DoesNotExist:
+            user_schedule = UserSchedule(user=user)
+        try:
+            user_reserved_slots = user_schedule.reserved_slots
         except TeacherSchedule.DoesNotExist:
-            reversed_slots = []
+            user_reserved_slots = []
 
-        reversed_slots.append(reserved_slot_dict)
+        user_reserved_slot = reserved_slot | {'teacher': teacher.teacher_name}
+        user_reserved_slots.append(user_reserved_slot)
+        user_schedule.reserved_slots = user_reserved_slots
+        user_schedule.save()
 
-        schedule.available_slots = slots_list
-        schedule.reversed_slots = reversed_slots
+        # save to teacher schedules
+        subject = request.POST['subject']
+        teacher_reserved_slot = reserved_slot | {'subject': subject, 'student': user.username}
 
-        schedule.save()
+        # delete the available slot
+        slots_list.remove(reserved_slot)
+        try:
+            teacher_reserved_slots = teacher_schedule.reserved_slots
+        except TeacherSchedule.DoesNotExist:
+            teacher_reserved_slots = []
+
+        teacher_reserved_slots.append(teacher_reserved_slot)
+
+        teacher_schedule.available_slots = slots_list
+        teacher_schedule.reversed_slots = teacher_reserved_slots
+
+        teacher_schedule.save()
 
     return render(request, 'teacher_page.html', {'teacher': teacher, 'teacher_image_url': teacher_image_url,
                                                  'subjects': subjects_list, 'slots': slots_list})
@@ -93,7 +118,7 @@ def teacher_profile(request):
                   {'subjects': subjects_list, 'form': form, 'teacher_image_url': teacher_image_url})
 
 
-def teacher_schedule(request):
+def teacher_schedule_view(request):
     teacher_id = request.session.get('id')
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
 
@@ -109,6 +134,7 @@ def teacher_schedule(request):
         slots = json.loads(slots_data)
 
         schedule.available_slots = slots
+
 
         schedule.save()
         return redirect('dashboard')

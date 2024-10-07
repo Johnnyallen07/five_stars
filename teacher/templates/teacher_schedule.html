@@ -14,17 +14,12 @@
 {% block content %}
     <h1>Teacher's Schedule</h1>
     <div class="teacher-schedule-container">
-
-
-        <!-- Left: Available Slots -->
         <div class="available-slots">
             <h2>Available Time Slots</h2>
             <ul id="slotList" class="slot-list">
                 <li class="empty-message">No time slots available yet.</li>
             </ul>
         </div>
-
-        <!-- Right: Time Slot Form -->
         <div class="schedule-form">
             <h2>Select Your Time Slot</h2>
             <label for="startTime">Start Time:</label>
@@ -34,8 +29,6 @@
             <input type="datetime-local" id="endTime" required>
 
             <button id="addSlotBtn" class="add-slot-button">Add Time Slot</button>
-
-            <!-- Submit form -->
             <form id="scheduleForm" method="POST">
                 {% csrf_token %}
                 <input type="hidden" id="slots" name="slots" value="">

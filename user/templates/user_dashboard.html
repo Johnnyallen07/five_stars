@@ -1,0 +1,193 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/my_learning.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+
+        <!-- Stats Section -->
+        <div class="stats-container">
+            <div class="box">
+                <h3>Total Learning Hours</h3>
+                <p>Hours</p>
+            </div>
+            <div class="box">
+                <h3>Courses Taken</h3>
+                {% if course_hour_taken > 1 %}
+                    <p>{{ course_hour_taken }} Courses</p>
+                {% else %}
+                    <p>{{ course_hour_taken }} Course</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="main-content">
+            <!-- Left Column - Upcoming Courses -->
+            <div class="left-column">
+                <h2>Upcoming Courses</h2>
+                {% for upcoming_slot in upcoming_slots %}
+                    <div class="course-item">
+                        <h4>{{ upcoming_slot.subject }}</h4>
+                        <div class="course-details">
+                            <p><span>Start Time:</span> {{ upcoming_slot.start }} </p>
+                            <p><span>End Time:</span> {{ upcoming_slot.end }} </p>
+                            <p><span>Teacher:</span> {{ upcoming_slot.teacher }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Recent Completed Courses -->
+                <div class="sub-section">
+                    <h2>Recent Completed Courses</h2>
+                    {% for completed_slot in completed_slots %}
+                        <div class="sub-course-item">
+                            <h4>{{ completed_slot.subject }}</h4>
+                            <div class="sub-course-details">
+                                <p><span>Completed On:</span> {{ completed_slot.end }}</p>
+                                <p><span>Teacher:</span> {{ completed_slot.teacher }}</p>
+                            </div>
+                            <div class="course-actions">
+                                <button class="completed-button" data-slot-id="{{ completed_slot }}"
+                                        data-action="completed">Completed
+                                </button>
+                                <button class="missed-button" data-slot-id="{{ completed_slot }}" data-action="missed">
+                                    Missed
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Missing Courses -->
+                <div class="sub-section">
+                    <h2>Missing Courses</h2>
+                    {% for missed_slot in missed_slots %}
+                        <div class="sub-course-item">
+                            <h4>{{ missed_slot.subject }}</h4>
+                            <div class="sub-course-details">
+                                <p><span>Missing Since:</span> {{ missed_slot.start }}</p>
+                                <p><span>Teacher:</span> {{ missed_slot.teacher }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <h4 id="modal-title">Confirm Action</h4>
+            <p id="modal-message">Are you sure you want to mark this course as completed/missed?</p>
+            <div class="modal-actions">
+                <button id="confirm-button">Yes</button>
+                <button id="cancel-button">No</button>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        const confirmModal = document.getElementById('confirmation-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const confirmButton = document.getElementById('confirm-button');
+        const cancelButton = document.getElementById('cancel-button');
+
+        let selectedSlotId = null;
+        let selectedAction = null;
+
+        // Add event listeners to the action buttons
+        const completedButton = document.querySelectorAll('.completed-button');
+        const missedButton = document.querySelectorAll('.missed-button');
+
+        completedButton.forEach(button => {
+            button.addEventListener('click', function () {
+                selectedSlotId = this.getAttribute('data-slot-id');
+                selectedAction = this.getAttribute('data-action');
+                openModal();
+            });
+        });
+
+        missedButton.forEach(button => {
+            button.addEventListener('click', function () {
+                selectedSlotId = this.getAttribute('data-slot-id');
+                selectedAction = this.getAttribute('data-action');
+                openModal();
+            });
+        });
+
+        function openModal() {
+            // Update the modal message based on the action
+            modalMessage.textContent = `Are you sure you want to mark this course as ${selectedAction}?`;
+            // Display the modal
+            confirmModal.style.display = 'block';
+        }
+
+        confirmButton.addEventListener('click', function () {
+            const data = {
+                slot: selectedSlotId,
+                status: selectedAction
+            };
+            console.log(data)
+
+            // Send a POST request to the server
+            fetch({% url 'user-dashboard' %}, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('An error occurred while updating the course status.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            confirmModal.style.display = 'none';
+        });
+
+        // Handle the cancel action
+        cancelButton.addEventListener('click', function () {
+            // Close the modal without doing anything
+            confirmModal.style.display = 'none';
+        });
+
+        // Utility function to get CSRF token (if using Django)
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+
+    </script>
+{% endblock %}

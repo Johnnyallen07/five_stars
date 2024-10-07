@@ -23,7 +23,7 @@
     <nav class="navbar">
         {% block nav-content %}
             <a href="{% url 'home' %}">Home</a>
-            <a href="#">My Learning</a>
+            <a href="{% url 'user-dashboard' %}">My Learning</a>
             <a href="{% url 'user-profile' %}">User Profile</a>
         {% endblock %}
     </nav>
