@@ -2,7 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from learning.models import Course
 
-
+'''
+User Model: CustomUser overrides Authorized User
+'''
 class CustomUser(AbstractUser):
     first_name = None
     last_name = None

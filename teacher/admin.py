@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Teacher, TeacherSchedule
+from .models import Teacher, TeacherSchedule, TeacherDisplay
 
 
 class TeacherAdmin(admin.ModelAdmin):
@@ -34,3 +34,10 @@ class TeacherScheduleAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TeacherSchedule, TeacherScheduleAdmin)
+
+
+class TeacherDisplayAdmin(admin.ModelAdmin):
+    list_display = ('teacher', 'brief_subjects')
+
+
+admin.site.register(TeacherDisplay, TeacherDisplayAdmin)

@@ -1,23 +1,26 @@
 import base64
 import json
-
+from datetime import datetime
+from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.core.files.base import ContentFile
-from django.core.mail import send_mail
-from django.http import JsonResponse
 
 from learning.models import Course
 from teacher.forms import TeacherForm
-from teacher.models import Teacher, TeacherSchedule
-from . import settings
+from teacher.models import Teacher, TeacherSchedule, TeacherDisplay
 from .forms import RegisterForm, TeacherRegisterForm
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 
 from .models import CustomUser
 
+'''
+Main App Views include: register/teacher-register, login, homepage/dashboard (User/Teacher)
+'''
+
 
 def login_view(request):
+    # simple login view, send id to global session (for necessary url hidden)
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -35,6 +38,7 @@ def login_view(request):
 
 
 def register_view(request):
+    # simple user register view
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -47,6 +51,7 @@ def register_view(request):
 
 
 def teacher_register_view(request):
+    # First teacher register form
     if request.method == 'POST':
         form = TeacherRegisterForm(request.POST)
 
@@ -61,12 +66,17 @@ def teacher_register_view(request):
 
 
 def teacher_register_profile(request):
+    # TODO: add default init like TeacherSchedule...
     teacher_form_data = request.session.get('teacher_form_data')
+    teacher_image_url = 'media/user_images/default.png'
     if request.method == 'POST':
-        profile_form = TeacherForm(request.POST)
+        data = request.POST.copy()
+        data['username'] = teacher_form_data['username']
+        profile_form = TeacherForm(data)
 
         if profile_form.is_valid():
 
+            # TODO: wrap image data to utils
             image_data = request.POST.get('image')
             format, imgstr = image_data.split(';base64,')
             ext = format.split('/')[-1]
@@ -79,6 +89,7 @@ def teacher_register_profile(request):
                 image=image,
                 is_teacher=True
             )
+
             teacher_user.set_password(teacher_form_data['password2'])
             teacher_user.save()
 
@@ -89,10 +100,19 @@ def teacher_register_profile(request):
             teacher.email = teacher_form_data.get('email')
             teacher.save()
 
+            # save to teacher_display model
+            teacher_display = TeacherDisplay(
+                teacher=teacher,
+                brief_subjects=profile_form.cleaned_data['brief_subjects'],
+                brief_introduction=profile_form.cleaned_data['brief_introduction'],
+            )
+            teacher_display.save()
+
             del request.session['teacher_form_data']
             return redirect('login')
         else:
-            return render(request, 'teacher_register_profile.html', {'form': profile_form})
+            return render(request, 'teacher_register_profile.html',
+                          {'form': profile_form, 'teacher_image_url': teacher_image_url})
 
     else:
         profile_form = TeacherForm()
@@ -100,11 +120,11 @@ def teacher_register_profile(request):
     return render(request, 'teacher_register_profile.html', {'form': profile_form})
 
 
-def purchase(request):
+def purchase_view(request):
     return render(request, 'purchase.html')
 
 
-def home_page(request):
+def index_page_view(request):
     return render(request, 'index.html')
 
 
@@ -114,12 +134,46 @@ def home_view(request):
     return render(request, 'home.html', {'courses': courses, 'teachers': teachers})
 
 
-def dashboard_view(request):
+def teacher_dashboard_view(request):
+    # TODO: add default when the teacher registered, wrap the method below
     teacher_id = request.session.get('id')
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
-    teacher_schedule = get_object_or_404(TeacherSchedule, teacher=teacher)
-    # teacher_schedule_json = json.dumps(teacher_schedule.available_slots) if teacher_schedule else '[]'
+    try:
+        teacher_schedule = TeacherSchedule.objects.get(teacher=teacher)
+    except TeacherSchedule.DoesNotExist:
+        teacher_schedule = TeacherSchedule(teacher=teacher)
+
+    try:
+        reserved_slots = teacher_schedule.reserved_slots
+    except TeacherSchedule.DoesNotExist:
+        reserved_slots = []
+
+    missed_slots = teacher_schedule.missed_slots
+
+    now = timezone.now()
+    upcoming_slots = []
+    completed_slots = teacher_schedule.completed_slots
+    total_courses_taken = len(completed_slots)
+
+    if reserved_slots:
+        for slot in reserved_slots:
+            date_str = slot['end']
+            date_format = '%Y-%m-%dT%H:%M'
+            date_obj = datetime.strptime(date_str, date_format)
+            date_obj = timezone.make_aware(date_obj)
+            if date_obj > now:
+                upcoming_slots.append(slot)
+            else:
+                completed_slots.append(slot)
+
+        teacher_schedule.reserved_slots = upcoming_slots
+        teacher_schedule.completed_slots = completed_slots
+
+    teacher_schedule.save()
+
     return render(request, 'dashboard.html',
                   {'teacher': teacher,
-                   'teacher_schedule': teacher_schedule,
-                   'reserved_slots': teacher_schedule.reserved_slots})
+                   'course_hour_taken': total_courses_taken,
+                   'reserved_slots': upcoming_slots,
+                   'completed_slots': completed_slots,
+                   'missed_slots': missed_slots})

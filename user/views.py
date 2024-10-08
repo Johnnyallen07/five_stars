@@ -4,11 +4,13 @@ from datetime import datetime
 from django.utils import timezone
 
 from django.shortcuts import render, get_object_or_404, redirect
-
-from five_stars.models import CustomUser
 from .forms import *
 from .models import UserSchedule
-
+'''
+User App Views include all pages excluding homepage: 
+user profile 
+user dashboard (my learning page currently), 
+'''
 
 def user_profile(request):
     user_id = request.session.get('id')
@@ -27,6 +29,7 @@ def user_profile(request):
 
 
 def user_dashboard(request):
+    # TODO: add default when the user registered
     user_id = request.session.get('id')
     user = get_object_or_404(CustomUser, id=user_id)
     try:
@@ -37,7 +40,10 @@ def user_dashboard(request):
         user_missed_slots = user_schedule.missed_slots
     except UserSchedule.DoesNotExist:
         user_missed_slots = []
-    reserved_slots = user_schedule.reserved_slots
+    try:
+        reserved_slots = user_schedule.reserved_slots
+    except UserSchedule.DoesNotExist:
+        reserved_slots = []
 
     now = timezone.now()
     upcoming_slots = []
@@ -71,12 +77,25 @@ def user_dashboard(request):
 
         status = data['status']
         if status == 'missed':
-            # the teacher schedule will also be changed
+            # the user and teacher schedule will be changed
             missed_slot = json.loads(data['slot'].replace("'", '"'))
             completed_slots.remove(missed_slot)
             user_missed_slots.append(missed_slot)
             user_schedule.completed_slots = completed_slots
             user_schedule.missed_slots = user_missed_slots
+
+            # teacher_schedule = TeacherSchedule.objects.get(teacher=Teacher.objects.get(teacher_id=user_id))
+            # teacher_completed_slots = teacher_schedule.completed_slots
+            # teacher_missed_slots = teacher_schedule.missed_slots
+            # del missed_slot['teacher']
+            # missed_slot['student'] = user.username
+            # teacher_missed_slot = missed_slot
+            # teacher_completed_slots.remove(missed_slot)
+            # teacher_missed_slots.append(teacher_missed_slot)
+            #
+            # teacher_schedule.completed_slots = teacher_completed_slots
+            # teacher_schedule.missed_slots = teacher_missed_slots
+            # teacher_schedule.save()
 
     user_schedule.save()
 

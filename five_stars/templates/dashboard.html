@@ -16,7 +16,11 @@
             </div>
             <div class="box">
                 <h3>Courses Taken</h3>
-                <p>8 Courses</p>
+                {% if course_hour_taken > 1 %}
+                    <p>{{ course_hour_taken }} Courses</p>
+                {% else %}
+                    <p>{{ course_hour_taken }} Course</p>
+                {% endif %}
             </div>
         </div>
 
@@ -42,41 +46,29 @@
                 <!-- Recent Completed Courses -->
                 <div class="sub-section">
                     <h2>Recent Completed Courses</h2>
-                    <div class="sub-course-item">
-                        <h4>Introduction to HTML & CSS</h4>
-                        <div class="sub-course-details">
-                            <p><span>Completed On:</span> 10th September 2024</p>
-                            <p><span>Student:</span> mark_twain</p>
+                    {% for completed_slot in completed_slots %}
+                        <div class="sub-course-item">
+                            <h4>{{ completed_slot.subject }}</h4>
+                            <div class="sub-course-details">
+                                <p><span>Completed On:</span>{{ completed_slot.end }}</p>
+                                <p><span>Student:</span> {{ completed_slot.student }}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="sub-course-item">
-                        <h4>JavaScript Essentials</h4>
-                        <div class="sub-course-details">
-                            <p><span>Completed On:</span> 5th October 2024</p>
-                            <p><span>Student:</span> emily_clark</p>
-                        </div>
-                    </div>
-                    <!-- Add more completed courses as needed -->
+                    {% endfor %}
                 </div>
 
                 <!-- Missing Courses -->
                 <div class="sub-section">
                     <h2>Missing Courses</h2>
-                    <div class="sub-course-item">
-                        <h4>Database Management Systems</h4>
-                        <div class="sub-course-details">
-                            <p><span>Missing Since:</span> 1st October 2024</p>
-                            <p><span>Student:</span> michael_brown</p>
+                    {% for missed_slot in missed_slots %}
+                        <div class="sub-course-item">
+                            <h4>{{ missed_slot.subject }}</h4>
+                            <div class="sub-course-details">
+                                <p><span>Missing Since:</span> {{ missed_slot.start }}</p>
+                                <p><span>Student:</span> {{ missed_slot.student }}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="sub-course-item">
-                        <h4>Network Security</h4>
-                        <div class="sub-course-details">
-                            <p><span>Missing Since:</span> 12th October 2024</p>
-                            <p><span>Student:</span> sarah_jones</p>
-                        </div>
-                    </div>
-                    <!-- Add more missing courses as needed -->
+                    {% endfor %}
                 </div>
             </div>
         </div>

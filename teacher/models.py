@@ -20,7 +20,17 @@ class TeacherSchedule(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     available_slots = models.JSONField(default=list)
     reserved_slots = models.JSONField(default=list)
+    completed_slots = models.JSONField(default=list)
     missed_slots = models.JSONField(default=list)
 
     def __str__(self):
         return f"{self.teacher_id}_schedule"
+
+
+class TeacherDisplay(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    brief_subjects = models.CharField(max_length=75)
+    brief_introduction = models.CharField(max_length=75)
+
+    def __str__(self):
+        return f"{self.teacher_id}_brief_info"

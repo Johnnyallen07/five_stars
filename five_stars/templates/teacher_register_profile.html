@@ -28,7 +28,7 @@
                     <button type="button" class="custom-file-button"
                             onclick="document.getElementById('photoInput').click();">Upload Photo
                     </button>
-                    <input type="file" id="photoInput" accept="image/*" onchange="previewImage()"
+                    <input type="file" id="photoInput" src="{{ teacher_image_url }}" accept="image/*" onchange="previewImage()"
                            style="display: none;">
 
 
@@ -63,6 +63,25 @@
 
             <!-- Right Column -->
             <div class="right-column">
+                <h2>Display Information</h2>
+                <div class="personal-info-box">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="summary">Subjects (in summary):</label>
+                            <input type="text" id="brief-subjects" name="brief_subjects"
+                                   value="{{ form.brief_subjects.value|default_if_none:'' }}"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="brief-introduction">Brief Introduction:</label>
+                            <input type="text" id="brief-intro" name="brief_introduction"
+                                   value="{{ form.brief_introduction.value|default_if_none:'' }}"
+                                   required>
+                        </div>
+                    </div>
+                </div>
                 <h2>Personal Information</h2>
                 <div class="personal-info-box">
 

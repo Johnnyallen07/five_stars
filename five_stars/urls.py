@@ -10,10 +10,10 @@ urlpatterns = [
   path('register/', views.register_view, name='register'),
   path('teacher-register/', views.teacher_register_view, name='teacher-register'),
   path('teacher-register/profile', views.teacher_register_profile, name='teacher-register-profile'),
-  path('purchase/', views.purchase, name='purchase'),
+  path('purchase/', views.purchase_view, name='purchase'),
   path('home/', views.home_view, name='home'),
-  path('dashboard/', views.dashboard_view, name='dashboard'),
-  path('', views.home_page, name='index'),
+  path('dashboard/', views.teacher_dashboard_view, name='dashboard'),
+  path('', views.index_page_view, name='index'),
   path('', include('learning.urls')),
   path('', include('teacher.urls')),
   path('', include('user.urls'))
