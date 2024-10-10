@@ -98,6 +98,21 @@
                 {% endfor %}
             </div>
         </div>
+        {% if competitions %}
+            <div class="subjects-box">
+
+                <h3>Competitions & Activities</h3>
+
+                <div class="subjects-list">
+
+                    {% for competition in competitions %}
+                        <h6 class="subject-item">{{ competition.strip }}</h6>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+        {% endif %}
     </div>
 
     <!-- Right Column -->
@@ -126,33 +141,36 @@
                 <div class="introduction-text">{{ teacher.introduction }}</div>
             </div>
         </div>
-        <h2>Available Schedule</h2>
-        <div class="schedule-box">
-            <div class="available-slots">
-                <ul id="slotList" class="slot-list">
-                    {% if slots %}
-                        {% for slot in slots %}
-                            <div class="time-slot">
-                                <div class="slot-header">
-                                    <span class="slot-label">Start Time:</span>
-                                    <span class="slot-time">{{ slot.start }}</span>
+        {% if not user.is_teacher %}
+            <h2>Available Schedule</h2>
+            <div class="schedule-box">
+                <div class="available-slots">
+                    <ul id="slotList" class="slot-list">
+                        {% if slots %}
+                            {% for slot in slots %}
+                                <div class="time-slot">
+                                    <div class="slot-header">
+                                        <span class="slot-label">Start Time:</span>
+                                        <span class="slot-time">{{ slot.start }}</span>
+                                    </div>
+                                    <div class="slot-header">
+                                        <span class="slot-label">End Time:</span>
+                                        <span class="slot-time">{{ slot.end }}</span>
+                                    </div>
+                                    <button class="reserve-btn"
+                                            onclick="openModal('{{ slot.start }}', '{{ slot.end }}')">
+                                        Reserve
+                                    </button>
                                 </div>
-                                <div class="slot-header">
-                                    <span class="slot-label">End Time:</span>
-                                    <span class="slot-time">{{ slot.end }}</span>
-                                </div>
-                                <button class="reserve-btn" onclick="openModal('{{ slot.start }}', '{{ slot.end }}')">
-                                    Reserve
-                                </button>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p>No schedule available.</p>
-                    {% endif %}
-                </ul>
-            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No schedule available.</p>
+                        {% endif %}
+                    </ul>
+                </div>
 
-        </div>
+            </div>
+        {% endif %}
     </div>
 
 </div>

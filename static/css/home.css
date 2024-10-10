@@ -1,11 +1,12 @@
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-
 }
-
 
 
 .section-title {
@@ -43,48 +44,90 @@ body {
 
 .teacher-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 200px); /* Fixed width of 200px for each box */
-    gap: 20px;
-    justify-content: flex-start;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjusted for more space */
+    gap: 60px;
+    justify-content: center;
+    width: 100%;
+    height: 100%; /* Allow grid to take the full height */
+    box-sizing: border-box;
+    padding-bottom: 20px;
     overflow-y: auto;
-
 }
 
-.teacher-grid a {
-    text-decoration: none; /* Remove underline from links */
-    color: inherit; /* Inherit color from parent */
-}
-
-.teacher-grid a:hover {
-    text-decoration: none; /* Ensure no underline on hover */
-}
-
-.teacher-box {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 200px; /* Fixed width */
-    height: 200px; /* Fixed height */
-    margin: 10px;
-
-}
-
-.teacher-box h3 {
-    margin: 10px 0;
-    font-size: 18px;
-    color: #333;
+.teacher-grid * {
     text-decoration: none;
 }
 
-.teacher-box h4{
-    margin:2px;
+.teacher-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+    text-align: center;
+    /*height: 100%;*/
+
 }
 
-.teacher-box p {
-    font-size: 14px;
-    color: #666;
+.teacher-card:hover {
+    /*transform: translateY(-10px);*/
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
+.teacher-image-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 15px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid #fff;
+    background-color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.teacher-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.teacher-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+.teacher-school {
+    font-size: 16px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+.teacher-subject {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2980b9;
+    margin-bottom: 15px;
+}
+
+.teacher-intro {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Gradient border at the top */
+.teacher-card::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #2980b9, #8e44ad);
+    position: absolute;
+    top: 0;
+    left: 0;
+}

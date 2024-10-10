@@ -15,10 +15,15 @@ teacher page (displayed in each home box)
 teacher profile, 
 teacher schedule
 '''
+
+
 def teacher_page(request, teacher_id):
     user_id = request.session.get('id')
+    user = CustomUser.objects.get(id=user_id)
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
     subjects_list = teacher.subjects.split(',')
+    competitions_list = teacher.competitions.split(',')
+    competitions_list = None if len(competitions_list) == 1 and competitions_list[0] == '' else competitions_list
     try:
         teacher_schedule = TeacherSchedule.objects.get(teacher=teacher)
     except TeacherSchedule.DoesNotExist:
@@ -69,8 +74,9 @@ def teacher_page(request, teacher_id):
 
         teacher_schedule.save()
 
-    return render(request, 'teacher_page.html', {'teacher': teacher, 'teacher_image_url': teacher_image_url,
-                                                 'subjects': subjects_list, 'slots': slots_list})
+    return render(request, 'teacher_page.html',
+                  {'user': user, 'teacher': teacher, 'teacher_image_url': teacher_image_url,
+                   'subjects': subjects_list, 'competitions': competitions_list, 'slots': slots_list})
 
 
 def teacher_profile(request):
@@ -87,12 +93,13 @@ def teacher_profile(request):
         teacher_image_url = default_image_url
 
     subjects_list = teacher.subjects.split(',')
+    competitions_list = teacher.competitions.split(',')
     if request.method == 'POST':
+        print(request.POST['competitions'])
         form = TeacherForm(request.POST, request.FILES)
         if form.is_valid():
             # Get the cleaned data
             cleaned_data = form.cleaned_data
-
             image_data = request.POST.get('image')
             format, imgstr = image_data.split(';base64,')
             ext = format.split('/')[-1]
@@ -100,7 +107,7 @@ def teacher_profile(request):
             if user.image and os.path.exists(user.image.path):
                 os.remove(user.image.path)
 
-            image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{user.get_username()}.{ext}""")
+            image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{user.id}.{ext}""")
             user.image = image
             user.save()
 
@@ -118,12 +125,16 @@ def teacher_profile(request):
             return redirect('dashboard')
         else:
             return render(request, 'teacher_profile.html',
-                          {'subjects': subjects_list, 'form': form, 'teacher_image_url': teacher_image_url,})
+                          {'subjects': subjects_list, 'competitions_list': competitions_list, 'form': form,
+                           'teacher_image_url': teacher_image_url, })
     else:
         form = TeacherForm(instance=teacher, teacher_display_instance=teacher_display, user_instance=user)
 
     return render(request, 'teacher_profile.html',
-                  {'subjects': subjects_list, 'form': form, 'teacher_image_url': teacher_image_url})
+                  {'subjects': subjects_list,
+                   'competitions_list': competitions_list,
+                   'form': form,
+                   'teacher_image_url': teacher_image_url})
 
 
 def teacher_schedule_view(request):

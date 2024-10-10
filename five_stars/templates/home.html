@@ -5,29 +5,40 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 {% block content %}
-{#    <h2 class="section-title">Current Products</h2>#}
-{#    <div class="course-grid">#}
-{#        {% for course in courses %}#}
-{##}
-{#            <div class="course-box">#}
-{#                <a href="{% url 'course' course.course_id %}">#}
-{#                    <img src="{{ course.image_url }}" alt="{{ course.title }}">#}
-{#                    <h4>{{ course.title }}</h4>#}
-{#                </a>#}
-{#            </div>#}
-{##}
-{#        {% endfor %}#}
-{#    </div>#}
+    {#    <h2 class="section-title">Current Products</h2>#}
+    {#    <div class="course-grid">#}
+    {#        {% for course in courses %}#}
+    {##}
+    {#            <div class="course-box">#}
+    {#                <a href="{% url 'course' course.course_id %}">#}
+    {#                    <img src="{{ course.image_url }}" alt="{{ course.title }}">#}
+    {#                    <h4>{{ course.title }}</h4>#}
+    {#                </a>#}
+    {#            </div>#}
+    {##}
+    {#        {% endfor %}#}
+    {#    </div>#}
     <h2 class="section-title">Available Teachers</h2>
     <div class="teacher-grid">
-        {% for teacher in teachers %}
-            <a href="{% url 'teacher' teacher.teacher_id %}">
-                <div class="teacher-box">
-                    <h3>{{ teacher.first_name }}</h3>
-                    <h4>{{ teacher.school }}</h4>
-                    <h4>{{ teacher.subjects }}</h4>
-                    <h5>{{ teacher.introduction }}</h5>
+        {% for teacher_display in teacher_display_list %}
+            <a href="{% url 'teacher' teacher_display.teacher_id %}">
+                <div class="teacher-card">
+                    <div class="teacher-image-container">
+                        <img src="{{ teacher_display.teacher_image }}" alt="Teacher Image" class="teacher-image">
+                    </div>
+                    <h2 class="teacher-name">{{teacher_display.teacher_name }}</h2>
+                    <p class="teacher-school">{{ teacher_display.school}}</p>
+                    <p class="teacher-subject">{{ teacher_display.brief_subjects }}</p>
+                    <p class="teacher-intro">
+                        {{ teacher_display.brief_introduction }}
+                    </p>
                 </div>
+{#                <div class="teacher-box">#}
+{#                    <h3>{{ teacher.first_name }}</h3>#}
+{#                    <h4>{{ teacher.school }}</h4>#}
+{#                    <h4>{{ teacher.subjects }}</h4>#}
+{#                    <h5>{{ teacher.introduction }}</h5>#}
+{#                </div>#}
             </a>
         {% endfor %}
 

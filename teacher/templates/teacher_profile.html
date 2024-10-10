@@ -60,6 +60,28 @@
 
 
                 </div>
+                <div class="subjects-box">
+                    <h3>Competitions & Activities</h3>
+                    <div id="competitions-container">
+                        {% if competitions_list %}
+                            {% for competition in competitions_list %}
+                                <div class="competition-field">
+                                    <input type="text" name="competition[]" value="{{ competition }}"
+                                           placeholder="Enter competition">
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="competition-field">
+                                <input type="text" name="competition[]" placeholder="Enter competition">
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="button" id="competition-remove-btn" class="remove-btn" onclick="removeCompetition()">Remove</button>
+                    <button type="button" class="add-btn" onclick="addCompetition()">Add</button>
+                    <input type="hidden" id="id_competitions" name="competitions">
+
+
+                </div>
             </div>
 
             <!-- Right Column -->
@@ -146,6 +168,7 @@
 {% endblock %}
 {% block script %}
     <script src="{% static 'js/subjects.js' %} "></script>
+    <script src="{% static 'js/competitions.js' %} "></script>
     <script src="{% static 'js/personal_image.js' %}" defer></script>
     <script src="{% static 'js/sumit_btn.js' %}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>

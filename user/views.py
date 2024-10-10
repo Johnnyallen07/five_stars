@@ -35,7 +35,7 @@ def user_dashboard(request):
     try:
         user_schedule = UserSchedule.objects.get(user=user)
     except UserSchedule.DoesNotExist:
-        user_schedule = UserSchedule()
+        user_schedule = UserSchedule(user=user)
     try:
         user_missed_slots = user_schedule.missed_slots
     except UserSchedule.DoesNotExist:

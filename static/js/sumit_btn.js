@@ -12,9 +12,23 @@ document.getElementById('submit-btn').addEventListener('click', function () {
     // Join subjects into a comma-separated string
     let subjectsString = subjects.join(',');
 
+    let competitionInputs = document.querySelectorAll('input[name="competition[]"]');
+    let competitions = [];
+
+    competitionInputs.forEach(function (input) {
+        if (input.value.trim()) {
+            competitions.push(input.value.trim());
+        }
+    });
+
+    let competitionsString = competitions.join(',');
+
     // Set the value to a hidden input field
-    const hiddenInput = document.getElementById('id_subjects');
-    hiddenInput.value = subjectsString;
+    const subjectHiddenInput = document.getElementById('id_subjects');
+    subjectHiddenInput.value = subjectsString;
+    const competitionHiddenInput = document.getElementById('id_competitions');
+    competitionHiddenInput.value = competitionsString;
+    // console.log(competitionsString)
 
     // Capture the image from the container using canvas
     const imageContainer = document.querySelector('.image-container');

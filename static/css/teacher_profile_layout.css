@@ -73,13 +73,18 @@
     display: flex;
 }
 
-.subject-field {
+.subject-field, .competition-field {
     margin: 10px 10px;
     display: flex;
     align-items: center;
 }
 
 .subject-field input {
+    width: 100%;
+    padding: 5px;
+}
+
+.competition-field input {
     width: 100%;
     padding: 5px;
 }

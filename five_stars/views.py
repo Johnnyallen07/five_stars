@@ -80,16 +80,17 @@ def teacher_register_profile(request):
             image_data = request.POST.get('image')
             format, imgstr = image_data.split(';base64,')
             ext = format.split('/')[-1]
-            image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{teacher_form_data['username']}.{ext}""")
+
 
             # teacher form depends on the customUser for login
             teacher_user = CustomUser(
                 username=teacher_form_data['username'],
                 email=teacher_form_data['email'],
-                image=image,
                 is_teacher=True
             )
 
+            image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{teacher_user.id}.{ext}""")
+            teacher_user.image = image
             teacher_user.set_password(teacher_form_data['password2'])
             teacher_user.save()
 
@@ -129,9 +130,25 @@ def index_page_view(request):
 
 
 def home_view(request):
+    user = CustomUser.objects.get(id=request.session.get('id'))
     courses = Course.objects.all()
     teachers = Teacher.objects.all()
-    return render(request, 'home.html', {'courses': courses, 'teachers': teachers})
+    teacher_display_list = []
+
+    for teacher in teachers:
+        teacher_id = teacher.teacher_id
+        teacher_display = TeacherDisplay.objects.get(teacher=teacher)
+        print(CustomUser.objects.get(id=teacher_id).image.url)
+        teacher_display_list.append({
+            'teacher_id': teacher_id,
+            'teacher_image': CustomUser.objects.get(id=teacher_id).image.url,
+            'teacher_name': teacher.teacher_name,
+            'school': teacher.school,
+            'brief_subjects': teacher_display.brief_subjects if teacher_display else '',
+            'brief_introduction': teacher_display.brief_introduction if teacher_display else '',
+        })
+
+    return render(request, 'home.html', {'courses': courses, 'user': user, 'teacher_display_list': teacher_display_list})
 
 
 def teacher_dashboard_view(request):

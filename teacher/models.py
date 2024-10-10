@@ -10,6 +10,7 @@ class Teacher(models.Model):
     email = models.EmailField()
     school = models.CharField(max_length=255)
     subjects = models.TextField(help_text="Comma-separated list of subjects")
+    competitions = models.TextField(help_text="Comma-separated list of competitions", default="")
     introduction = models.TextField()
 
     def __str__(self):

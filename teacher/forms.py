@@ -10,13 +10,15 @@ TeacherForm contains User, Teacher, and TeacherDisplay instances for teacher reg
 class TeacherForm(forms.ModelForm):
     username = forms.CharField(max_length=75)
     image = forms.ImageField(required=False)
+    competitions = forms.CharField(required=False)
+    subjects = forms.CharField(required=False)
     brief_subjects = forms.CharField(max_length=75)
     brief_introduction = forms.CharField(max_length=75)
 
     class Meta:
         model = Teacher
         fields = ['username', 'image', 'brief_subjects', 'brief_introduction', 'first_name', 'last_name', 'school',
-                  'subjects', 'introduction']
+                  'subjects', 'competitions', 'introduction']
 
     def __init__(self, *args, **kwargs):
         teacher_display_instance = kwargs.pop('teacher_display_instance', None)
