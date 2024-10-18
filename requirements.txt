@@ -1,4 +1,0 @@
-Django==5.1.1
-markdown2==2.5.0
-cryptography==43.0.1
-pillow==10.4.0
