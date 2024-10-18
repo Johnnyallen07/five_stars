@@ -5,16 +5,20 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-  path('admin/', admin.site.urls),
-  path('login/', views.login_view, name='login'),
-  path('register/', views.register_view, name='register'),
-  path('teacher-register/', views.teacher_register_view, name='teacher-register'),
-  path('teacher-register/profile', views.teacher_register_profile, name='teacher-register-profile'),
-  path('purchase/', views.purchase_view, name='purchase'),
-  path('home/', views.home_view, name='home'),
-  path('dashboard/', views.teacher_dashboard_view, name='dashboard'),
-  path('', views.index_page_view, name='index'),
-  path('', include('learning.urls')),
-  path('', include('teacher.urls')),
-  path('', include('user.urls'))
+    path("admin/", admin.site.urls),
+    path("login/", views.login_view, name="login"),
+    path("register/", views.register_view, name="register"),
+    path("teacher-register/", views.teacher_register_view, name="teacher-register"),
+    path(
+        "teacher-register/profile",
+        views.teacher_register_profile,
+        name="teacher-register-profile",
+    ),
+    path("purchase/", views.purchase_view, name="purchase"),
+    path("home/", views.home_view, name="home"),
+    path("dashboard/", views.teacher_dashboard_view, name="dashboard"),
+    path("", views.index_page_view, name="index"),
+    path("", include("learning.urls")),
+    path("", include("teacher.urls")),
+    path("", include("user.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -20,10 +20,15 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = []
+dev-dependencies = [
+    "basedpyright>=1.19.0",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/five_stars", "src/learning/", "src/teacher/", "src/user"]
+
+[project.scripts]
+fivestars = "five_stars:manage"

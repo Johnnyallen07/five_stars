@@ -9,5 +9,6 @@ class UserSchedule(models.Model):
     reserved_slots = models.JSONField(default=list)
     completed_slots = models.JSONField(default=list)
     missed_slots = models.JSONField(default=list)
+
     def __str__(self):
         return f"{self.user_id}_schedule"

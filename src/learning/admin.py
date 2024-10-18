@@ -8,7 +8,7 @@ class SubtopicInline(admin.TabularInline):
 
 
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ['title', 'course']
+    list_display = ["title", "course"]
     inlines = [SubtopicInline]
     #
     # def get_form(self, request, obj=None, **kwargs):
@@ -23,8 +23,8 @@ admin.site.register(Topic, TopicAdmin)
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'image_url')
-    search_fields = ('title',)
+    list_display = ("title", "image_url")
+    search_fields = ("title",)
 
 
 admin.site.register(MaterialPost)

@@ -6,31 +6,33 @@ from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import *
 from .models import UserSchedule
-'''
+
+"""
 User App Views include all pages excluding homepage: 
 user profile 
 user dashboard (my learning page currently), 
-'''
+"""
+
 
 def user_profile(request):
-    user_id = request.session.get('id')
+    user_id = request.session.get("id")
     user = get_object_or_404(CustomUser, id=user_id)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             # Optionally add a success message or redirect
-            return redirect('home')
+            return redirect("home")
         else:
-            return render(request, 'user_profile.html', {'form': form})
+            return render(request, "user_profile.html", {"form": form})
     else:
         form = UserForm(instance=user)
-        return render(request, 'user_profile.html', {'form': form})
+        return render(request, "user_profile.html", {"form": form})
 
 
 def user_dashboard(request):
     # TODO: add default when the user registered
-    user_id = request.session.get('id')
+    user_id = request.session.get("id")
     user = get_object_or_404(CustomUser, id=user_id)
     try:
         user_schedule = UserSchedule.objects.get(user=user)
@@ -52,8 +54,8 @@ def user_dashboard(request):
 
     if reserved_slots:
         for slot in reserved_slots:
-            date_str = slot['end']
-            date_format = '%Y-%m-%dT%H:%M'
+            date_str = slot["end"]
+            date_format = "%Y-%m-%dT%H:%M"
 
             # Convert the string to a datetime object
             date_obj = datetime.strptime(date_str, date_format)
@@ -71,14 +73,14 @@ def user_dashboard(request):
         user_schedule.reserved_slots = upcoming_slots
         user_schedule.completed_slots = completed_slots
 
-    if request.method == 'POST':
+    if request.method == "POST":
         data = json.loads(request.body)
         print(data)
 
-        status = data['status']
-        if status == 'missed':
+        status = data["status"]
+        if status == "missed":
             # the user and teacher schedule will be changed
-            missed_slot = json.loads(data['slot'].replace("'", '"'))
+            missed_slot = json.loads(data["slot"].replace("'", '"'))
             completed_slots.remove(missed_slot)
             user_missed_slots.append(missed_slot)
             user_schedule.completed_slots = completed_slots
@@ -99,9 +101,14 @@ def user_dashboard(request):
 
     user_schedule.save()
 
-    return render(request, 'user_dashboard.html',
-                  {'user': user,
-                   'course_hour_taken': total_courses_taken,
-                   'upcoming_slots': upcoming_slots,
-                   'completed_slots': completed_slots,
-                   'missed_slots': user_missed_slots})
+    return render(
+        request,
+        "user_dashboard.html",
+        {
+            "user": user,
+            "course_hour_taken": total_courses_taken,
+            "upcoming_slots": upcoming_slots,
+            "completed_slots": completed_slots,
+            "missed_slots": user_missed_slots,
+        },
+    )

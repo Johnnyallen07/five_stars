@@ -8,8 +8,10 @@ from django.dispatch import receiver
 class Course(models.Model):
     course_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
-    image_url = models.URLField(max_length=200,
-                                default='https://cdn.pixabay.com/photo/2015/11/15/07/47/geometry-1044090_1280.jpg')
+    image_url = models.URLField(
+        max_length=200,
+        default="https://cdn.pixabay.com/photo/2015/11/15/07/47/geometry-1044090_1280.jpg",
+    )
 
     def __str__(self):
         return self.title
@@ -17,7 +19,9 @@ class Course(models.Model):
 
 class Topic(models.Model):
     title = models.CharField(max_length=200)
-    course = models.ForeignKey(Course, related_name="topics", on_delete=models.CASCADE, default=0)
+    course = models.ForeignKey(
+        Course, related_name="topics", on_delete=models.CASCADE, default=0
+    )
 
     def __str__(self):
         return self.title
@@ -33,10 +37,12 @@ class Subtopic(models.Model):
 
 
 class MaterialPost(models.Model):
-    course_title = models.ForeignKey(Course, related_name="materials", on_delete=models.CASCADE)
+    course_title = models.ForeignKey(
+        Course, related_name="materials", on_delete=models.CASCADE
+    )
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True)
-    file_path = models.FileField(upload_to='uploads/', blank=True, null=True)
+    file_path = models.FileField(upload_to="uploads/", blank=True, null=True)
     date_created = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
 

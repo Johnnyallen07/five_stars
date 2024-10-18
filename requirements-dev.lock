@@ -11,6 +11,7 @@
 -e file:.
 asgiref==3.8.1
     # via django
+basedpyright==1.19.0
 cffi==1.17.1
     # via cryptography
 cryptography==43.0.1
@@ -19,6 +20,8 @@ django==5.1.1
     # via five-stars
 markdown2==2.5.0
     # via five-stars
+nodejs-wheel-binaries==20.18.0
+    # via basedpyright
 pillow==10.4.0
     # via five-stars
 pycparser==2.22

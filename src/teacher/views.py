@@ -9,21 +9,25 @@ from teacher.forms import TeacherForm, TeacherScheduleForm
 from teacher.models import Teacher, TeacherSchedule, TeacherDisplay
 from user.models import UserSchedule
 
-'''
+"""
 Teacher App Views include all pages excluding dashboard: 
 teacher page (displayed in each home box) 
 teacher profile, 
 teacher schedule
-'''
+"""
 
 
 def teacher_page(request, teacher_id):
-    user_id = request.session.get('id')
+    user_id = request.session.get("id")
     user = CustomUser.objects.get(id=user_id)
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
-    subjects_list = teacher.subjects.split(',')
-    competitions_list = teacher.competitions.split(',')
-    competitions_list = None if len(competitions_list) == 1 and competitions_list[0] == '' else competitions_list
+    subjects_list = teacher.subjects.split(",")
+    competitions_list = teacher.competitions.split(",")
+    competitions_list = (
+        None
+        if len(competitions_list) == 1 and competitions_list[0] == ""
+        else competitions_list
+    )
     try:
         teacher_schedule = TeacherSchedule.objects.get(teacher=teacher)
     except TeacherSchedule.DoesNotExist:
@@ -36,10 +40,9 @@ def teacher_page(request, teacher_id):
 
     teacher_image_url = get_object_or_404(CustomUser, id=teacher_id).image.url
 
-    if request.method == 'POST':
-
+    if request.method == "POST":
         # add username to teacher slot, add teacher_name to user slot
-        reserved_slot: dict = json.loads(request.POST['slot'])
+        reserved_slot: dict = json.loads(request.POST["slot"])
 
         user = get_object_or_404(CustomUser, id=user_id)
         try:
@@ -51,14 +54,17 @@ def teacher_page(request, teacher_id):
         except TeacherSchedule.DoesNotExist:
             user_reserved_slots = []
 
-        user_reserved_slot = reserved_slot | {'teacher': teacher.teacher_name}
+        user_reserved_slot = reserved_slot | {"teacher": teacher.teacher_name}
         user_reserved_slots.append(user_reserved_slot)
         user_schedule.reserved_slots = user_reserved_slots
         user_schedule.save()
 
         # save to teacher schedules
-        subject = request.POST['subject']
-        teacher_reserved_slot = reserved_slot | {'subject': subject, 'student': user.username}
+        subject = request.POST["subject"]
+        teacher_reserved_slot = reserved_slot | {
+            "subject": subject,
+            "student": user.username,
+        }
 
         # delete the available slot
         slots_list.remove(reserved_slot)
@@ -74,71 +80,95 @@ def teacher_page(request, teacher_id):
 
         teacher_schedule.save()
 
-    return render(request, 'teacher_page.html',
-                  {'user': user, 'teacher': teacher, 'teacher_image_url': teacher_image_url,
-                   'subjects': subjects_list, 'competitions': competitions_list, 'slots': slots_list})
+    return render(
+        request,
+        "teacher_page.html",
+        {
+            "user": user,
+            "teacher": teacher,
+            "teacher_image_url": teacher_image_url,
+            "subjects": subjects_list,
+            "competitions": competitions_list,
+            "slots": slots_list,
+        },
+    )
 
 
 def teacher_profile(request):
-    teacher_id = request.session.get('id')
+    teacher_id = request.session.get("id")
     user = request.user
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
     teacher_display = TeacherDisplay.objects.get(teacher=teacher)
     teacher_image = get_object_or_404(CustomUser, id=teacher_id).image
     teacher_image_url = teacher_image.url
-    default_image_url = '/media/user_images/default.png'
+    default_image_url = "/media/user_images/default.png"
 
     # Check if teacher_image exists and the file exists on the server
     if not (teacher_image and os.path.exists(teacher_image.path)):
         teacher_image_url = default_image_url
 
-    subjects_list = teacher.subjects.split(',')
-    competitions_list = teacher.competitions.split(',')
-    if request.method == 'POST':
-        print(request.POST['competitions'])
+    subjects_list = teacher.subjects.split(",")
+    competitions_list = teacher.competitions.split(",")
+    if request.method == "POST":
+        print(request.POST["competitions"])
         form = TeacherForm(request.POST, request.FILES)
         if form.is_valid():
             # Get the cleaned data
             cleaned_data = form.cleaned_data
-            image_data = request.POST.get('image')
-            format, imgstr = image_data.split(';base64,')
-            ext = format.split('/')[-1]
+            image_data = request.POST.get("image")
+            format, imgstr = image_data.split(";base64,")
+            ext = format.split("/")[-1]
 
             if user.image and os.path.exists(user.image.path):
                 os.remove(user.image.path)
 
-            image = ContentFile(base64.b64decode(imgstr), name=f"""teacher_{user.id}.{ext}""")
+            image = ContentFile(
+                base64.b64decode(imgstr), name=f"""teacher_{user.id}.{ext}"""
+            )
             user.image = image
             user.save()
 
             # Save the rest of the data to Teacher and TeacherDisplay
             teacher_data = cleaned_data.copy()
-            teacher_data['teacher_id'] = user.id
-            Teacher.objects.update_or_create(
-                teacher_id=user.id,
-                defaults=teacher_data
-            )
+            teacher_data["teacher_id"] = user.id
+            Teacher.objects.update_or_create(teacher_id=user.id, defaults=teacher_data)
 
-            teacher_display.brief_introduction = cleaned_data['brief_introduction']
-            teacher_display.brief_subjects = cleaned_data['brief_subjects']
+            teacher_display.brief_introduction = cleaned_data["brief_introduction"]
+            teacher_display.brief_subjects = cleaned_data["brief_subjects"]
             teacher_display.save()
-            return redirect('dashboard')
+            return redirect("dashboard")
         else:
-            return render(request, 'teacher_profile.html',
-                          {'subjects': subjects_list, 'competitions_list': competitions_list, 'form': form,
-                           'teacher_image_url': teacher_image_url, })
+            return render(
+                request,
+                "teacher_profile.html",
+                {
+                    "subjects": subjects_list,
+                    "competitions_list": competitions_list,
+                    "form": form,
+                    "teacher_image_url": teacher_image_url,
+                },
+            )
     else:
-        form = TeacherForm(instance=teacher, teacher_display_instance=teacher_display, user_instance=user)
+        form = TeacherForm(
+            instance=teacher,
+            teacher_display_instance=teacher_display,
+            user_instance=user,
+        )
 
-    return render(request, 'teacher_profile.html',
-                  {'subjects': subjects_list,
-                   'competitions_list': competitions_list,
-                   'form': form,
-                   'teacher_image_url': teacher_image_url})
+    return render(
+        request,
+        "teacher_profile.html",
+        {
+            "subjects": subjects_list,
+            "competitions_list": competitions_list,
+            "form": form,
+            "teacher_image_url": teacher_image_url,
+        },
+    )
 
 
 def teacher_schedule_view(request):
-    teacher_id = request.session.get('id')
+    teacher_id = request.session.get("id")
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
     # Try to get the existing schedule or initialize to None
     try:
@@ -147,16 +177,20 @@ def teacher_schedule_view(request):
         schedule = TeacherSchedule()
         schedule.teacher = teacher
 
-    if request.method == 'POST':
-        slots_data = request.POST.get('slots')
+    if request.method == "POST":
+        slots_data = request.POST.get("slots")
         slots = json.loads(slots_data)
 
         schedule.available_slots = slots
 
         schedule.save()
-        return redirect('dashboard')
+        return redirect("dashboard")
 
     else:
         # Prepare the existing slots for rendering in the template
-        slots_json = json.dumps(schedule.available_slots) if schedule else '[]'
-        return render(request, 'teacher_schedule.html', {'schedule': schedule, 'slots_json': slots_json})
+        slots_json = json.dumps(schedule.available_slots) if schedule else "[]"
+        return render(
+            request,
+            "teacher_schedule.html",
+            {"schedule": schedule, "slots_json": slots_json},
+        )

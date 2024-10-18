@@ -6,6 +6,7 @@ Invite Code: 6666 (test teacher functionality)
 
 ```bash
 rye sync
+source .venv/bin/activate
 ./src/manage.py migrate
 ./src/manage.py runserver
 # open 127.0.0.1:8000
