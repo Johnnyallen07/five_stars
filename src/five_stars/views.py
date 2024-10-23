@@ -68,7 +68,7 @@ def teacher_register_view(request):
 def teacher_register_profile(request):
     # TODO: add default init like TeacherSchedule...
     teacher_form_data = request.session.get("teacher_form_data")
-    teacher_image_url = "media/user_images/default.png"
+    teacher_image_url = "/media/user_images/default.png"
     if request.method == "POST":
         data = request.POST.copy()
         data["username"] = teacher_form_data["username"]
@@ -99,6 +99,10 @@ def teacher_register_profile(request):
             teacher.teacher_id = teacher_user.id
             teacher.teacher_name = teacher_form_data.get("username")
             teacher.email = teacher_form_data.get("email")
+
+            # add default competition field
+            teacher.competitions = ""
+
             teacher.save()
 
             # save to teacher_display model
@@ -121,7 +125,7 @@ def teacher_register_profile(request):
     else:
         profile_form = TeacherForm()
 
-    return render(request, "teacher_register_profile.html", {"form": profile_form})
+    return render(request, "teacher_register_profile.html", {"form": profile_form, "teacher_image_url": teacher_image_url})
 
 
 def purchase_view(request):
