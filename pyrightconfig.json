@@ -3,5 +3,6 @@
   "reportMissingTypeStubs": "none",
   "reportUnknownMemberType": "none",
   "reportUnknownArgumentType": "none",
-  "reportUnknownLambdaType": "none"
+  "reportUnknownLambdaType": "none",
+  "reportAny": "none"
 }

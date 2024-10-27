@@ -1,5 +1,5 @@
 import base64
-import json
+from django.http import HttpRequest, QueryDict
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
@@ -19,7 +19,7 @@ Main App Views include: register/teacher-register, login, homepage/dashboard (Us
 """
 
 
-def login_view(request):
+def login_view(request: HttpRequest):
     # simple login view, send id to global session (for necessary url hidden)
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -37,20 +37,44 @@ def login_view(request):
     return render(request, "login.html", {"form": form})
 
 
-def register_view(request):
-    # simple user register view
+def to_login_data(data: QueryDict) -> QueryDict:
+    result = QueryDict(mutable=True)
+    result["csrfmiddlewaretoken"] = data["csrfmiddlewaretoken"]
+    result["username"] = data["username"]
+    result["password"] = data["password1"]
+    return result
+
+
+def register_view(request: HttpRequest):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("login")
+            # auto login
+            auth_form = AuthenticationForm(data=to_login_data(request.POST))
+            auth_form.is_valid()
+            user = auth_form.get_user()
+            login(request, user)
+            request.session["id"] = user.id
+            if user.is_teacher:
+                return redirect("post_register_teacher")
+            else:
+                return redirect("post_register_student")
     else:
         form = RegisterForm()
 
     return render(request, "register.html", {"form": form})
 
 
-def teacher_register_view(request):
+def post_register_teacher_view(request: HttpRequest):
+    return render(request, "post_register_teacher.html")
+
+
+def post_register_student_view(request: HttpRequest):
+    return render(request, "post_register_teacher.html")
+
+
+def teacher_register_view(request: HttpRequest):
     # First teacher register form
     if request.method == "POST":
         form = TeacherRegisterForm(request.POST)
@@ -65,7 +89,7 @@ def teacher_register_view(request):
     return render(request, "teacher_register.html", {"form": form})
 
 
-def teacher_register_profile(request):
+def teacher_register_profile(request: HttpRequest):
     # TODO: add default init like TeacherSchedule...
     teacher_form_data = request.session.get("teacher_form_data")
     teacher_image_url = "/media/user_images/default.png"
@@ -125,18 +149,22 @@ def teacher_register_profile(request):
     else:
         profile_form = TeacherForm()
 
-    return render(request, "teacher_register_profile.html", {"form": profile_form, "teacher_image_url": teacher_image_url})
+    return render(
+        request,
+        "teacher_register_profile.html",
+        {"form": profile_form, "teacher_image_url": teacher_image_url},
+    )
 
 
-def purchase_view(request):
+def purchase_view(request: HttpRequest):
     return render(request, "purchase.html")
 
 
-def index_page_view(request):
+def index_page_view(request: HttpRequest):
     return render(request, "index.html")
 
 
-def home_view(request):
+def home_view(request: HttpRequest):
     user = CustomUser.objects.get(id=request.session.get("id"))
     courses = Course.objects.all()
     teachers = Teacher.objects.all()
@@ -172,7 +200,7 @@ def home_view(request):
     )
 
 
-def teacher_dashboard_view(request):
+def teacher_dashboard_view(request: HttpRequest):
     # TODO: add default when the teacher registered, wrap the method below
     teacher_id = request.session.get("id")
     teacher = get_object_or_404(Teacher, teacher_id=teacher_id)

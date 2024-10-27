@@ -8,6 +8,16 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("login/", views.login_view, name="login"),
     path("register/", views.register_view, name="register"),
+    path(
+        "post_register_teacher/",
+        views.post_register_teacher_view,
+        name="post_register_teacher",
+    ),
+    path(
+        "post_register_student/",
+        views.post_register_student_view,
+        name="post_register_student",
+    ),
     path("teacher-register/", views.teacher_register_view, name="teacher-register"),
     path(
         "teacher-register/profile",

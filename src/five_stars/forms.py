@@ -1,6 +1,8 @@
+from typing import override
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Course, CustomUser
+from learning.models import Course
+from .models import CustomUser
 
 
 class TeacherRegisterForm(UserCreationForm):
@@ -22,6 +24,7 @@ class TeacherRegisterForm(UserCreationForm):
 
         return invite_code
 
+    @override
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_teacher = True
